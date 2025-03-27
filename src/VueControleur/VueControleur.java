@@ -39,7 +39,14 @@ public class VueControleur extends JFrame implements Observer {
     private ImageIcon icoFou;
     private ImageIcon icoChevalier;
     private ImageIcon icoTour;
+ 
+    private ImageIcon icoRoiN;
+    private ImageIcon icoReinN;
     private ImageIcon icoPionN;
+    private ImageIcon icoFouN;
+    private ImageIcon icoChevalierN;
+    private ImageIcon icoTourN;
+
     
 
     private Case caseClic1; // mémorisation des cases cliquées
@@ -76,6 +83,12 @@ public class VueControleur extends JFrame implements Observer {
         icoTour=chargerIcone("Images/wR.png");
      
         icoPionN=chargerIcone("Images/bP.png");
+        icoRoiN = chargerIcone("Images/bK.png");
+        icoReinN=chargerIcone("Images/bQ.png");
+        icoFouN=chargerIcone("Images/bB.png");
+        icoChevalierN=chargerIcone("Images/bK.png");
+        icoTourN=chargerIcone("Images/bR.png");
+       
 
 
     }
@@ -160,24 +173,59 @@ public class VueControleur extends JFrame implements Observer {
 
                     if (e!= null) {
                         if (c.getPiece() instanceof Roi) {
-
-                            tabJLabel[x][y].setIcon(icoRoi);
+                            String couleur=c.getPiece().getCouleur();
+                         	if(couleur=="B") {
+                         		tabJLabel[x][y].setIcon(icoRoi);
+                         	}
+                         	else {
+                         		tabJLabel[x][y].setIcon(icoRoiN);
+                         	}
                            
                         }
                         else if (c.getPiece() instanceof Reine) {
-                        	 tabJLabel[x][y].setIcon(icoRein);
+                        	 String couleur=c.getPiece().getCouleur();
+                         	if(couleur=="B") {
+                         		tabJLabel[x][y].setIcon(icoRein);
+                         	}
+                         	else {
+                         		tabJLabel[x][y].setIcon(icoReinN);
+                         	}
                         }
                         else if(c.getPiece() instanceof Pion) {
-                        	tabJLabel[x][y].setIcon(icoPion);
+                        	String couleur=c.getPiece().getCouleur();
+                        	if(couleur=="B") {
+                        		tabJLabel[x][y].setIcon(icoPion);
+                        	}
+                        	else {
+                        		tabJLabel[x][y].setIcon(icoPionN);
+                        	}
                         }
                         else if(c.getPiece() instanceof Cavalier) {
-                        	tabJLabel[x][y].setIcon(icoChevalier);
+                        	String couleur=c.getPiece().getCouleur();
+                        	if(couleur=="B") {
+                        		tabJLabel[x][y].setIcon(icoChevalier);
+                        	}
+                        	else {
+                        		tabJLabel[x][y].setIcon(icoChevalierN);
+                        	}
                         }
                         else if(c.getPiece() instanceof Fou) {
-                        	tabJLabel[x][y].setIcon(icoFou);
+                        	String couleur=c.getPiece().getCouleur();
+                        	if(couleur=="B") {
+                        		tabJLabel[x][y].setIcon(icoFou);
+                        	}
+                        	else {
+                        		tabJLabel[x][y].setIcon(icoFouN);
+                        	}
                         }
                         else if(c.getPiece() instanceof Tour) {
-                        	tabJLabel[x][y].setIcon(icoTour);
+                        	String couleur=c.getPiece().getCouleur();
+                        	if(couleur=="B") {
+                        		tabJLabel[x][y].setIcon(icoTour);
+                        	}
+                        	else {
+                        		tabJLabel[x][y].setIcon(icoTourN);
+                        	}
                         }
                     } else {
                         tabJLabel[x][y].setIcon(null);

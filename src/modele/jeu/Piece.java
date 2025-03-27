@@ -13,10 +13,11 @@ public abstract class Piece {
     protected Case c;
     protected Plateau plateau;
     protected DecorateurCasesAccessibles casesAccessibles;
+    protected String couleur;
 
-    public Piece(Plateau _plateau) {
+    public Piece(Plateau _plateau,String _couleur) {
         plateau = _plateau;
-
+        couleur=_couleur;
     }
 
     public void quitterCase() {
@@ -32,6 +33,9 @@ public abstract class Piece {
 
     public Case getCase() {
         return c;
+    }
+    public String getCouleur() {
+    	return couleur;
     }
 
 

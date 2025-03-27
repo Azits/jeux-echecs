@@ -12,14 +12,12 @@ import java.util.ArrayList;
 
 public class Cavalier extends Piece
 {
-    public Cavalier(Plateau _plateau) {
-        super(_plateau);
+    public Cavalier(Plateau _plateau,String _couleur) {
+        super(_plateau,_couleur);
         casesAccessibles = new DecorateurCasesEnLigne(new DecorateurCasesEnDiagonale(null));
 
         // le décorateur récupère les cases en diagonale et en ligne
         // ArrayList<Case> lst = casesAccessibles.getCasesAccessibles();
 
     }
-
-
 }

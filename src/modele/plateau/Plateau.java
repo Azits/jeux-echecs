@@ -51,15 +51,17 @@ public class Plateau extends Observable {
 
     public void placerPieces() {
 
-    	Roi roiB = new Roi(this);
-        Roi roiN = new Roi(this);
-        Reine reineB = new Reine(this);
-        Reine reineN = new Reine(this);
+    	Roi roiB = new Roi(this,"B");
+        Roi roiN = new Roi(this,"N");
+        Reine reineB = new Reine(this,"B");
+        Reine reineN = new Reine(this,"N");
         
         ArrayList<Pion> pionsB = new ArrayList<>();
         ArrayList<Pion> pionsN = new ArrayList<>();
+        
         ArrayList<Cavalier> cavaliersB = new ArrayList<>();
         ArrayList<Cavalier> cavaliersN = new ArrayList<>();
+        
         ArrayList<Fou> fousB = new ArrayList<>();
         ArrayList<Fou> fousN = new ArrayList<>();
         ArrayList<Tour> toursB = new ArrayList<>();
@@ -72,8 +74,8 @@ public class Plateau extends Observable {
 
         // Placement des pions
         for (int i = 0; i < 8; i++) {
-            Pion pionB = new Pion(this);
-            Pion pionN = new Pion(this);
+            Pion pionB = new Pion(this,"B");
+            Pion pionN = new Pion(this,"N");
 
             pionB.allerSurCase(grilleCases[i][6]); 
             pionN.allerSurCase(grilleCases[i][1]); 
@@ -83,10 +85,10 @@ public class Plateau extends Observable {
         }
 
         // Placement des cavaliers
-        cavaliersB.add(new Cavalier(this));
-        cavaliersB.add(new Cavalier(this));
-        cavaliersN.add(new Cavalier(this));
-        cavaliersN.add(new Cavalier(this));
+        cavaliersB.add(new Cavalier(this,"B"));
+        cavaliersB.add(new Cavalier(this,"B"));
+        cavaliersN.add(new Cavalier(this,"N"));
+        cavaliersN.add(new Cavalier(this,"N"));
 
         cavaliersB.get(0).allerSurCase(grilleCases[1][7]);
         cavaliersB.get(1).allerSurCase(grilleCases[6][7]); 
@@ -94,10 +96,10 @@ public class Plateau extends Observable {
         cavaliersN.get(1).allerSurCase(grilleCases[6][0]); 
 
         // Placement des fous
-        fousB.add(new Fou(this));
-        fousB.add(new Fou(this));
-        fousN.add(new Fou(this));
-        fousN.add(new Fou(this));
+        fousB.add(new Fou(this,"B"));
+        fousB.add(new Fou(this,"B"));
+        fousN.add(new Fou(this,"N"));
+        fousN.add(new Fou(this,"N"));
 
         fousB.get(0).allerSurCase(grilleCases[2][7]); 
         fousB.get(1).allerSurCase(grilleCases[5][7]); 
@@ -105,10 +107,10 @@ public class Plateau extends Observable {
         fousN.get(1).allerSurCase(grilleCases[5][0]); 
 
         // Placement des tours
-        toursB.add(new Tour(this));
-        toursB.add(new Tour(this));
-        toursN.add(new Tour(this));
-        toursN.add(new Tour(this));
+        toursB.add(new Tour(this,"B"));
+        toursB.add(new Tour(this,"B"));
+        toursN.add(new Tour(this,"N"));
+        toursN.add(new Tour(this,"N"));
 
         toursB.get(0).allerSurCase(grilleCases[0][7]);
         toursB.get(1).allerSurCase(grilleCases[7][7]);
