@@ -8,12 +8,16 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
-
+import modele.jeu.Cavalier;
 import modele.jeu.Coup;
+import modele.jeu.Fou;
 import modele.jeu.Jeu;
 import modele.plateau.Case;
 import modele.jeu.Piece;
+import modele.jeu.Pion;
+import modele.jeu.Reine;
 import modele.jeu.Roi;
+import modele.jeu.Tour;
 import modele.plateau.Plateau;
 
 
@@ -30,6 +34,13 @@ public class VueControleur extends JFrame implements Observer {
     private static final int pxCase = 50; // nombre de pixel par case
     // icones affichées dans la grille
     private ImageIcon icoRoi;
+    private ImageIcon icoRein;
+    private ImageIcon icoPion;
+    private ImageIcon icoFou;
+    private ImageIcon icoChevalier;
+    private ImageIcon icoTour;
+    private ImageIcon icoPionN;
+    
 
     private Case caseClic1; // mémorisation des cases cliquées
     private Case caseClic2;
@@ -58,6 +69,13 @@ public class VueControleur extends JFrame implements Observer {
 
     private void chargerLesIcones() {
         icoRoi = chargerIcone("Images/wK.png");
+        icoRein=chargerIcone("Images/wQ.png");
+        icoPion=chargerIcone("Images/wP.png");
+        icoFou=chargerIcone("Images/wB.png");
+        icoChevalier=chargerIcone("Images/wK.png");
+        icoTour=chargerIcone("Images/wR.png");
+     
+        icoPionN=chargerIcone("Images/bP.png");
 
 
     }
@@ -144,7 +162,22 @@ public class VueControleur extends JFrame implements Observer {
                         if (c.getPiece() instanceof Roi) {
 
                             tabJLabel[x][y].setIcon(icoRoi);
-
+                           
+                        }
+                        else if (c.getPiece() instanceof Reine) {
+                        	 tabJLabel[x][y].setIcon(icoRein);
+                        }
+                        else if(c.getPiece() instanceof Pion) {
+                        	tabJLabel[x][y].setIcon(icoPion);
+                        }
+                        else if(c.getPiece() instanceof Cavalier) {
+                        	tabJLabel[x][y].setIcon(icoChevalier);
+                        }
+                        else if(c.getPiece() instanceof Fou) {
+                        	tabJLabel[x][y].setIcon(icoFou);
+                        }
+                        else if(c.getPiece() instanceof Tour) {
+                        	tabJLabel[x][y].setIcon(icoTour);
                         }
                     } else {
                         tabJLabel[x][y].setIcon(null);
