@@ -1,6 +1,7 @@
 package VueControleur;
 
 import java.awt.*;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -54,7 +55,7 @@ public class VueControleur extends JFrame implements Observer {
 
 
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône, suivant ce qui est présent dans le modèle)
-
+    private JPanel panelSidebar;
 
     public VueControleur(Jeu _jeu) {
         jeu = _jeu;
@@ -108,7 +109,8 @@ public class VueControleur extends JFrame implements Observer {
     private void placerLesComposantsGraphiques() {
         setTitle("Jeu d'Échecs");
         setResizable(false);
-        setSize(sizeX * pxCase, sizeX * pxCase);
+        int largeurFenetre=(sizeX * pxCase)+300;
+        setSize(largeurFenetre,(sizeX * pxCase));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // permet de terminer l'application à la fermeture de la fenêtre
 
         JComponent grilleJLabels = new JPanel(new GridLayout(sizeY, sizeX)); // grilleJLabels va contenir les cases graphiques et les positionner sous la forme d'une grille
@@ -153,7 +155,13 @@ public class VueControleur extends JFrame implements Observer {
                 grilleJLabels.add(jlab);
             }
         }
-        add(grilleJLabels);
+        add(grilleJLabels,BorderLayout.CENTER);
+        
+        panelSidebar=new JPanel();
+        panelSidebar.setBackground(Color.BLUE);
+        panelSidebar.setPreferredSize(new Dimension(largeurFenetre-(sizeX * pxCase),( sizeX * pxCase)));
+        add(panelSidebar,BorderLayout.EAST);
+        
     }
 
     

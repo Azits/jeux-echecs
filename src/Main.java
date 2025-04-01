@@ -1,5 +1,6 @@
 
 import VueControleur.VueControleur;
+
 import modele.jeu.Jeu;
 import modele.plateau.Plateau;
 
@@ -15,6 +16,5 @@ public class Main {
         Jeu jeu = new Jeu();
         VueControleur vc = new VueControleur(jeu);
         vc.setVisible(true);
-
     }
 }
