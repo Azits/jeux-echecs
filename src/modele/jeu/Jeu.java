@@ -10,7 +10,7 @@ public class Jeu extends Thread{
     private Joueur j1;
     private Joueur j2;
     protected Coup coupRecu;
-    private boolean tour;
+    private boolean lancer;
     private Joueur joueurActuel;
     private Roi roi;
 
@@ -23,7 +23,7 @@ public class Jeu extends Thread{
         
         joueurActuel=j1;
         
-        tour=true;
+        lancer=true;
 
         start();
 
@@ -59,7 +59,7 @@ public class Jeu extends Thread{
 
     public void jouerPartie() {
 
-    	while (tour) {
+    	while(lancer) {
             
             synchronized (this) {
                 try {
