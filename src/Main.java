@@ -1,6 +1,5 @@
 
 import VueControleur.VueControleur;
-
 import modele.jeu.Jeu;
 import modele.plateau.Plateau;
 

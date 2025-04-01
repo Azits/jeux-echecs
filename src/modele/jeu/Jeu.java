@@ -10,15 +10,20 @@ public class Jeu extends Thread{
     private Joueur j1;
     private Joueur j2;
     protected Coup coupRecu;
-
+    private boolean tour;
+    private Joueur joueurActuel;
     private Roi roi;
 
     public Jeu() {
         plateau = new Plateau();
         plateau.placerPieces();
 
-        j1 = new Joueur(this);
-        j2 = new Joueur(this);
+        j1 = new Joueur(this,"Azits","B");
+        j2 = new Joueur(this,"AZ","N");
+        
+        joueurActuel=j1;
+        
+        tour=true;
 
         start();
 
@@ -54,12 +59,48 @@ public class Jeu extends Thread{
 
     public void jouerPartie() {
 
-        while(true) {
-            Coup c = j1.getCoup();
-            appliquerCoup(c);
+    	while (tour) {
+            
+            synchronized (this) {
+                try {
+                    while (coupRecu == null) {
+                        wait();  
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                appliquerCoup(coupRecu);
+                
+                coupRecu = null;
+                
+                if (joueurActuel == j1) {
+                    joueurActuel = j2;
+                } else {
+                    joueurActuel = j1;
+                }
+                
+                synchronized (joueurActuel) {
+                    joueurActuel.setMonTour(true);
+                    joueurActuel.notify();
+                }
+            }
+            synchronized (joueurActuel) {
+                while (!joueurActuel.getMonTour()) {
+                    try {
+                        joueurActuel.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
+    }
+    public String getCouleurJoueurActuel() {
+    	return joueurActuel.getCouleur();
+    }
 
     }
 
 
-}
+

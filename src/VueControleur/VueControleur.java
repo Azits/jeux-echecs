@@ -56,6 +56,7 @@ public class VueControleur extends JFrame implements Observer {
 
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône, suivant ce qui est présent dans le modèle)
     private JPanel panelSidebar;
+    private JLabel labelTemps;
 
     public VueControleur(Jeu _jeu) {
         jeu = _jeu;
@@ -132,7 +133,13 @@ public class VueControleur extends JFrame implements Observer {
                     public void mouseClicked(MouseEvent e) {
 
                         if (caseClic1 == null) {
-                            caseClic1 = plateau.getCases()[xx][yy];
+                        	if (plateau.getCases()[xx][yy].getPiece().getCouleur().equals(jeu.getCouleurJoueurActuel())) {
+                                caseClic1 = plateau.getCases()[xx][yy];
+                                System.out.println(jeu.getCouleurJoueurActuel());
+                            }
+                        	else {
+                        		System.out.println("ce n'est pas à vous de jouer  de jouer");
+                        	}
                         } else {
                             caseClic2 = plateau.getCases()[xx][yy];
                             jeu.envoyerCoup(new Coup(caseClic1, caseClic2));
@@ -158,8 +165,11 @@ public class VueControleur extends JFrame implements Observer {
         add(grilleJLabels,BorderLayout.CENTER);
         
         panelSidebar=new JPanel();
-        panelSidebar.setBackground(Color.BLUE);
+        panelSidebar.setLayout(new BorderLayout());
+        panelSidebar.setBackground(new Color(150, 150, 210));
         panelSidebar.setPreferredSize(new Dimension(largeurFenetre-(sizeX * pxCase),( sizeX * pxCase)));
+        labelTemps = new JLabel("Temps restant: 10:00", SwingConstants.CENTER);
+        panelSidebar.add(labelTemps, BorderLayout.NORTH);
         add(panelSidebar,BorderLayout.EAST);
         
     }
