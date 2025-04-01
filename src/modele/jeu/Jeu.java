@@ -59,6 +59,7 @@ public class Jeu extends Thread{
 
     public void appliquerCoup(Coup coup) {
         plateau.deplacerPiece(coup.dep, coup.arr);
+        
     }
 
     public void run() {

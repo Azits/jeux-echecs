@@ -277,7 +277,7 @@ public class VueControleur extends JFrame implements Observer {
         // Ajouter les pièces prises par le joueur 1 (blanc)
         for (Piece piece : piecesPrisesJ1) {
           
-            JLabel lblPiece = new JLabel(icoTour);
+            JLabel lblPiece = new JLabel(icoTourN);
             joueur1.add(lblPiece);
         }
 
