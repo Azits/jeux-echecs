@@ -1,5 +1,5 @@
 package VueControleur;
-
+import java.util.ArrayList;
 import java.awt.*;
 
 import java.awt.event.MouseAdapter;
@@ -56,6 +56,8 @@ public class VueControleur extends JFrame implements Observer {
 
     private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône, suivant ce qui est présent dans le modèle)
     private JPanel panelSidebar;
+    private JPanel joueur1;
+    private JPanel joueur2;
     private JLabel labelTemps;
 
     public VueControleur(Jeu _jeu) {
@@ -165,11 +167,22 @@ public class VueControleur extends JFrame implements Observer {
         add(grilleJLabels,BorderLayout.CENTER);
         
         panelSidebar=new JPanel();
+        joueur1=new JPanel();
+        joueur2=new JPanel();
+        
         panelSidebar.setLayout(new BorderLayout());
         panelSidebar.setBackground(new Color(150, 150, 210));
         panelSidebar.setPreferredSize(new Dimension(largeurFenetre-(sizeX * pxCase),( sizeX * pxCase)));
-        labelTemps = new JLabel("Temps restant: 10:00", SwingConstants.CENTER);
-        panelSidebar.add(labelTemps, BorderLayout.NORTH);
+        
+        joueur1.setLayout(new FlowLayout());
+        joueur1.setBackground(new Color(50, 50, 110));
+        panelSidebar.add(joueur1, BorderLayout.SOUTH);
+        
+        joueur2.setLayout(new FlowLayout());
+        joueur2.setBackground(new Color(50, 50, 110));
+        panelSidebar.add(joueur2, BorderLayout.NORTH);
+        
+  
         add(panelSidebar,BorderLayout.EAST);
         
     }
@@ -179,7 +192,7 @@ public class VueControleur extends JFrame implements Observer {
      * Il y a une grille du côté du modèle ( jeu.getGrille() ) et une grille du côté de la vue (tabJLabel)
      */
     private void mettreAJourAffichage() {
-
+    	mettreAJourPiecesPrises(jeu.getPiecesPrise(1),jeu.getPiecesPrise(2));
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
 
@@ -256,10 +269,36 @@ public class VueControleur extends JFrame implements Observer {
             }
         }
     }
+    public void mettreAJourPiecesPrises(ArrayList<Piece> piecesPrisesJ1, ArrayList<Piece> piecesPrisesJ2) {
+        // Vider les panneaux
+    	joueur1.removeAll();
+        joueur2.removeAll();
+
+        // Ajouter les pièces prises par le joueur 1 (blanc)
+        for (Piece piece : piecesPrisesJ1) {
+          
+            JLabel lblPiece = new JLabel(icoTour);
+            joueur1.add(lblPiece);
+        }
+
+        // Ajouter les pièces prises par le joueur 2 (noir)
+        for (Piece piece : piecesPrisesJ2) {
+          
+        	JLabel lblPiece = new JLabel(icoTour);
+            joueur2.add(lblPiece);
+        }
+
+        // Mettre à jour l'affichage
+        joueur1.revalidate();
+        joueur1.repaint();
+        joueur2.revalidate();
+        joueur2.repaint();
+    }
 
     @Override
     public void update(Observable o, Object arg) {
         mettreAJourAffichage();
+        
         /*
 
         // récupérer le processus graphique pour rafraichir

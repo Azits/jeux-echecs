@@ -1,5 +1,5 @@
 package modele.jeu;
-
+import java.util.ArrayList;
 import modele.plateau.Case;
 import modele.plateau.Plateau;
 
@@ -12,7 +12,8 @@ public class Jeu extends Thread{
     protected Coup coupRecu;
     private boolean lancer;
     private Joueur joueurActuel;
-    private Roi roi;
+    private ArrayList<Piece> piecesPrisesJ1;
+    private ArrayList<Piece> piecesPrisesJ2 ;
 
     public Jeu() {
         plateau = new Plateau();
@@ -21,9 +22,16 @@ public class Jeu extends Thread{
         j1 = new Joueur(this,"Azits","B");
         j2 = new Joueur(this,"AZ","N");
         
+        
         joueurActuel=j1;
         
         lancer=true;
+        
+        piecesPrisesJ1=new ArrayList<>();
+        piecesPrisesJ2=new ArrayList<>();
+        
+        piecesPrisesJ1.add(new Tour(plateau,"N"));
+        piecesPrisesJ2.add(new Tour(plateau,"B"));
 
         start();
 
@@ -98,6 +106,21 @@ public class Jeu extends Thread{
     }
     public String getCouleurJoueurActuel() {
     	return joueurActuel.getCouleur();
+    }
+    public void ajouterPiecePrise(Piece piece) {
+        if (piece.getCouleur().equals("B")) {
+            piecesPrisesJ1.add(piece);
+        } else {
+            piecesPrisesJ2.add(piece);
+        }
+    }
+    public ArrayList<Piece> getPiecesPrise(int i) {
+        if (i==1) {
+            return piecesPrisesJ1;
+        } else if (i==2) {
+        	return piecesPrisesJ2;
+        }
+        return null;
     }
 
     }

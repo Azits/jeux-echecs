@@ -6,7 +6,6 @@ public class Joueur {
     private String nomJoueur;
     private String couleur;
 
-
     public Joueur(Jeu _jeu,String nom,String Couleur) {
         jeu = _jeu;
         this.monTour=false;
