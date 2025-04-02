@@ -5,38 +5,40 @@ import modele.plateau.Plateau;
 
 import javax.print.event.PrintJobEvent;
 
-public class Jeu extends Thread{
+public abstract class Jeu extends Thread{
+	
+	public static final int N_JOUEUR=2;
     private Plateau plateau;
-    private Joueur j1;
-    private Joueur j2;
     protected Coup coupRecu;
+    private Joueur[]joueurs;
+    private int idxJoueurActuel;
     private boolean lancer;
-    private Joueur joueurActuel;
     private ArrayList<Piece> piecesPrisesJ1;
     private ArrayList<Piece> piecesPrisesJ2 ;
 
     public Jeu() {
         plateau = new Plateau();
         plateau.placerPieces();
-
-        j1 = new Joueur(this,"Azits","B");
-        j2 = new Joueur(this,"AZ","N");
-        
-        
-        joueurActuel=j1;
-        
+        joueurs=new Joueur[N_JOUEUR];
+        joueurs[0]=new Joueur(this,"Azits","N");
+        joueurs[1]=new Joueur(this,"Mori","B");
+        idxJoueurActuel=1;
         lancer=true;
         
         piecesPrisesJ1=new ArrayList<>();
         piecesPrisesJ2=new ArrayList<>();
-        
         piecesPrisesJ1.add(new Tour(plateau,"N"));
         piecesPrisesJ2.add(new Tour(plateau,"B"));
 
         start();
 
     }
-
+    private Joueur getJoueurSuivant() {
+        idxJoueurActuel = (idxJoueurActuel+1) % N_JOUEUR;
+        return joueurs[idxJoueurActuel];
+    }
+    
+    
     public Plateau getPlateau() {
         return plateau;
     }
@@ -83,30 +85,18 @@ public class Jeu extends Thread{
                 
                 coupRecu = null;
                 
-                if (joueurActuel == j1) {
-                    joueurActuel = j2;
-                } else {
-                    joueurActuel = j1;
-                }
+               Joueur joueurActuel=getJoueurSuivant();
                 
                 synchronized (joueurActuel) {
                     joueurActuel.setMonTour(true);
                     joueurActuel.notify();
                 }
             }
-            synchronized (joueurActuel) {
-                while (!joueurActuel.getMonTour()) {
-                    try {
-                        joueurActuel.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+           
         }
     }
     public String getCouleurJoueurActuel() {
-    	return joueurActuel.getCouleur();
+    	return joueurs[idxJoueurActuel].getCouleur();
     }
     public void ajouterPiecePrise(Piece piece) {
         if (piece.getCouleur().equals("B")) {

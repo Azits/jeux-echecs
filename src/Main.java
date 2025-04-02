@@ -1,6 +1,8 @@
 
 import VueControleur.VueControleur;
+
 import modele.jeu.Jeu;
+import modele.jeu.JeuxEchecs;
 import modele.plateau.Plateau;
 
 /*
@@ -12,7 +14,7 @@ import modele.plateau.Plateau;
 
 public class Main {
     public static void main(String[] args) {
-        Jeu jeu = new Jeu();
+        Jeu jeu = new JeuxEchecs();
         VueControleur vc = new VueControleur(jeu);
         vc.setVisible(true);
     }
