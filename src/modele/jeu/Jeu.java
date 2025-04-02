@@ -20,8 +20,8 @@ public abstract class Jeu extends Thread{
         plateau = new Plateau();
         plateau.placerPieces();
         joueurs=new Joueur[N_JOUEUR];
-        joueurs[0]=new Joueur(this,"Azits","N");
-        joueurs[1]=new Joueur(this,"Mori","B");
+        joueurs[0]=new JoueurHumain(this,"Azits","N");
+        joueurs[1]=new JoueurHumain(this,"Mori","B");
         idxJoueurActuel=1;
         lancer=true;
         
