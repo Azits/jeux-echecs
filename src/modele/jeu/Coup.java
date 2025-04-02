@@ -9,4 +9,5 @@ public class Coup {
         dep = _dep;
         arr = _arr;
     }
+    
 }

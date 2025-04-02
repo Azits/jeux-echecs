@@ -60,7 +60,17 @@ public abstract class Jeu extends Thread{
 
 
     public void appliquerCoup(Coup coup) {
-        plateau.deplacerPiece(coup.dep, coup.arr);
+    	Case c=coup.arr;
+    	if(c.vide()) {
+    		plateau.deplacerPiece(coup.dep, coup.arr);
+    	}
+    	else {
+    		Piece prise=c.getPiece();
+    		ajouterPiecePrise(prise);
+    		plateau.deplacerPiece(coup.dep, coup.arr);
+    		
+    	}
+        
         
     }
 

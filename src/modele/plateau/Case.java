@@ -23,10 +23,17 @@ public class Case {
     public Case(Plateau _plateau) {
 
         plateau = _plateau;
+        p=null;
     }
 
     public Piece getPiece() {
         return p;
+    }
+    public boolean vide() {
+    	if(p==null) {
+    		return true;
+    	}
+    	return false;
     }
 /*
     public void setEntite(Piece _e) {

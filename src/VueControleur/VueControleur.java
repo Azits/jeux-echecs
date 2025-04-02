@@ -143,6 +143,7 @@ public class VueControleur extends JFrame implements Observer {
                         		System.out.println("ce n'est pas à vous de jouer  de jouer");
                         	}
                         } else {
+                        	
                             caseClic2 = plateau.getCases()[xx][yy];
                             jeu.envoyerCoup(new Coup(caseClic1, caseClic2));
                             caseClic1 = null;
