@@ -59,12 +59,16 @@ public class VueControleur extends JFrame implements Observer {
     private JPanel joueur1;
     private JPanel joueur2;
     private JLabel labelTemps;
+    
+    private ArrayList<Case> casesAccessiblesActuelles;
 
     public VueControleur(Jeu _jeu) {
         jeu = _jeu;
         plateau = jeu.getPlateau();
         sizeX = plateau.SIZE_X;
         sizeY = plateau.SIZE_Y;
+        
+        casesAccessiblesActuelles=new ArrayList<>();
 
 
 
@@ -83,14 +87,14 @@ public class VueControleur extends JFrame implements Observer {
         icoRein=chargerIcone("Images/wQ.png");
         icoPion=chargerIcone("Images/wP.png");
         icoFou=chargerIcone("Images/wB.png");
-        icoChevalier=chargerIcone("Images/wK.png");
+        icoChevalier=chargerIcone("Images/wN.png");
         icoTour=chargerIcone("Images/wR.png");
      
         icoPionN=chargerIcone("Images/bP.png");
         icoRoiN = chargerIcone("Images/bK.png");
         icoReinN=chargerIcone("Images/bQ.png");
         icoFouN=chargerIcone("Images/bB.png");
-        icoChevalierN=chargerIcone("Images/bK.png");
+        icoChevalierN=chargerIcone("Images/bN.png");
         icoTourN=chargerIcone("Images/bR.png");
        
 
@@ -137,7 +141,9 @@ public class VueControleur extends JFrame implements Observer {
                         if (caseClic1 == null) {
                         	if (plateau.getCases()[xx][yy].getPiece().getCouleur().equals(jeu.getCouleurJoueurActuel())) {
                                 caseClic1 = plateau.getCases()[xx][yy];
+                                casesAccessiblesActuelles = caseClic1.getPiece().getCasesAccessibles();
                                 System.out.println(jeu.getCouleurJoueurActuel());
+                                mettreAJourAffichage();
                             }
                         	else {
                         		System.out.println("ce n'est pas à vous de jouer  de jouer");
@@ -145,9 +151,15 @@ public class VueControleur extends JFrame implements Observer {
                         } else {
                         	
                             caseClic2 = plateau.getCases()[xx][yy];
-                            jeu.envoyerCoup(new Coup(caseClic1, caseClic2));
-                            caseClic1 = null;
-                            caseClic2 = null;
+                            if( !caseClic2.equals(caseClic1)) {
+                            	if(plateau.positionValide(xx,yy)) {
+                            		jeu.envoyerCoup(new Coup(caseClic1, caseClic2));
+                            		caseClic1 = null;
+                            		caseClic2 = null;
+                            	}
+                            }
+                            casesAccessiblesActuelles.clear();
+                            
                         }
 
                     }
@@ -193,81 +205,51 @@ public class VueControleur extends JFrame implements Observer {
      * Il y a une grille du côté du modèle ( jeu.getGrille() ) et une grille du côté de la vue (tabJLabel)
      */
     private void mettreAJourAffichage() {
-    	mettreAJourPiecesPrises(jeu.getPiecesPrise(1),jeu.getPiecesPrise(2));
+        // Met à jour l'affichage des pièces capturées
+        mettreAJourPiecesPrises(jeu.getPiecesPrise(1), jeu.getPiecesPrise(2));
+
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
 
                 Case c = plateau.getCases()[x][y];
+                JLabel jlab = tabJLabel[x][y];
 
-                if (c != null) {
-
-                    Piece e = c.getPiece();
-
-                    if (e!= null) {
-                        if (c.getPiece() instanceof Roi) {
-                            String couleur=c.getPiece().getCouleur();
-                         	if(couleur=="B") {
-                         		tabJLabel[x][y].setIcon(icoRoi);
-                         	}
-                         	else {
-                         		tabJLabel[x][y].setIcon(icoRoiN);
-                         	}
-                           
-                        }
-                        else if (c.getPiece() instanceof Reine) {
-                        	 String couleur=c.getPiece().getCouleur();
-                         	if(couleur=="B") {
-                         		tabJLabel[x][y].setIcon(icoRein);
-                         	}
-                         	else {
-                         		tabJLabel[x][y].setIcon(icoReinN);
-                         	}
-                        }
-                        else if(c.getPiece() instanceof Pion) {
-                        	String couleur=c.getPiece().getCouleur();
-                        	if(couleur=="B") {
-                        		tabJLabel[x][y].setIcon(icoPion);
-                        	}
-                        	else {
-                        		tabJLabel[x][y].setIcon(icoPionN);
-                        	}
-                        }
-                        else if(c.getPiece() instanceof Cavalier) {
-                        	String couleur=c.getPiece().getCouleur();
-                        	if(couleur=="B") {
-                        		tabJLabel[x][y].setIcon(icoChevalier);
-                        	}
-                        	else {
-                        		tabJLabel[x][y].setIcon(icoChevalierN);
-                        	}
-                        }
-                        else if(c.getPiece() instanceof Fou) {
-                        	String couleur=c.getPiece().getCouleur();
-                        	if(couleur=="B") {
-                        		tabJLabel[x][y].setIcon(icoFou);
-                        	}
-                        	else {
-                        		tabJLabel[x][y].setIcon(icoFouN);
-                        	}
-                        }
-                        else if(c.getPiece() instanceof Tour) {
-                        	String couleur=c.getPiece().getCouleur();
-                        	if(couleur=="B") {
-                        		tabJLabel[x][y].setIcon(icoTour);
-                        	}
-                        	else {
-                        		tabJLabel[x][y].setIcon(icoTourN);
-                        	}
-                        }
-                    } else {
-                        tabJLabel[x][y].setIcon(null);
-
-                    }
-
-
+                // Réinitialiser les couleurs de fond (couleur damier)
+                if ((y % 2 == 0 && x % 2 == 0) || (y % 2 != 0 && x % 2 != 0)) {
+                    jlab.setBackground(new Color(50, 50, 110));
+                } else {
+                    jlab.setBackground(new Color(150, 150, 210));
                 }
 
+                //  Réinitialiser les icônes
+                if (c != null && c.getPiece() != null) {
+                    Piece piece = c.getPiece();
+                    String couleur = piece.getCouleur();
+
+                    if (piece instanceof Roi) {
+                        jlab.setIcon(couleur.equals("B") ? icoRoi : icoRoiN);
+                    } else if (piece instanceof Reine) {
+                        jlab.setIcon(couleur.equals("B") ? icoRein : icoReinN);
+                    } else if (piece instanceof Pion) {
+                        jlab.setIcon(couleur.equals("B") ? icoPion : icoPionN);
+                    } else if (piece instanceof Cavalier) {
+                        jlab.setIcon(couleur.equals("B") ? icoChevalier : icoChevalierN);
+                    } else if (piece instanceof Fou) {
+                        jlab.setIcon(couleur.equals("B") ? icoFou : icoFouN);
+                    } else if (piece instanceof Tour) {
+                        jlab.setIcon(couleur.equals("B") ? icoTour : icoTourN);
+                    }
+                } else {
+                    jlab.setIcon(null); // pas de pièce
+                }
             }
+        }
+
+        for (Case caseAcc : casesAccessiblesActuelles) {
+            int x = caseAcc.getX();
+            int y = caseAcc.getY();
+
+            tabJLabel[x][y].setBackground(new Color(0, 255, 0, 100));
         }
     }
     public void mettreAJourPiecesPrises(ArrayList<Piece> piecesPrisesJ1, ArrayList<Piece> piecesPrisesJ2) {
@@ -277,16 +259,54 @@ public class VueControleur extends JFrame implements Observer {
 
         // Ajouter les pièces prises par le joueur 1 (blanc)
         for (Piece piece : piecesPrisesJ1) {
-          
-            JLabel lblPiece = new JLabel(icoTourN);
-            joueur1.add(lblPiece);
+        	JLabel lblPiece=new JLabel(icoPionN);
+        	if(piece instanceof Tour) {
+        		lblPiece= new JLabel(icoTourN);
+        	}
+        	else if (piece instanceof Pion) {
+        		lblPiece= new JLabel(icoPionN);
+        	}
+        	else if (piece instanceof Cavalier) {
+        		lblPiece= new JLabel(icoChevalierN);
+        	}
+        	else if (piece instanceof Fou) {
+        		lblPiece= new JLabel(icoFouN);
+        	}
+        	else if (piece instanceof Reine) {
+        		lblPiece= new JLabel(icoReinN);
+        	}
+        	else if (piece instanceof Roi) {
+        		lblPiece= new JLabel(icoRoiN);
+        	}
+        	
+        	joueur1.add(lblPiece);
+        	
         }
 
         // Ajouter les pièces prises par le joueur 2 (noir)
         for (Piece piece : piecesPrisesJ2) {
           
-        	JLabel lblPiece = new JLabel(icoTour);
-            joueur2.add(lblPiece);
+        	JLabel lblPiece=new JLabel(icoPion);
+        	if(piece instanceof Tour) {
+        		lblPiece= new JLabel(icoTour);
+        	}
+        	else if (piece instanceof Pion) {
+        		lblPiece= new JLabel(icoPion);
+        	}
+        	else if (piece instanceof Cavalier) {
+        		lblPiece= new JLabel(icoChevalier);
+        	}
+        	else if (piece instanceof Fou) {
+        		lblPiece= new JLabel(icoFou);
+        	}
+        	else if (piece instanceof Reine) {
+        		lblPiece= new JLabel(icoRein);
+        	}
+        	else if (piece instanceof Roi) {
+        		lblPiece= new JLabel(icoRoi);
+        	}
+        	
+        	joueur2.add(lblPiece);
         }
 
         // Mettre à jour l'affichage

@@ -1,5 +1,7 @@
 package modele.jeu;
 
+import java.util.ArrayList;
+
 import modele.plateau.Case;
 import modele.plateau.DecorateurCasesAccessibles;
 import modele.plateau.Direction;
@@ -37,6 +39,8 @@ public abstract class Piece {
     public String getCouleur() {
     	return couleur;
     }
+
+	public abstract ArrayList<Case> getCasesAccessibles();
 
 
 

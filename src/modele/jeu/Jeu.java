@@ -27,9 +27,7 @@ public abstract class Jeu extends Thread{
         
         piecesPrisesJ1=new ArrayList<>();
         piecesPrisesJ2=new ArrayList<>();
-        piecesPrisesJ1.add(new Tour(plateau,"N"));
-        piecesPrisesJ2.add(new Tour(plateau,"B"));
-
+        
         start();
 
     }
@@ -110,9 +108,9 @@ public abstract class Jeu extends Thread{
     }
     public void ajouterPiecePrise(Piece piece) {
         if (piece.getCouleur().equals("B")) {
-            piecesPrisesJ1.add(piece);
-        } else {
             piecesPrisesJ2.add(piece);
+        } else {
+            piecesPrisesJ1.add(piece);
         }
     }
     public ArrayList<Piece> getPiecesPrise(int i) {

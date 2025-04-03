@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public abstract class DecorateurCasesAccessibles {
 
-    Plateau plateau; // TODO
+	Plateau plateau; // TODO
     Piece piece; // TODO
 
     private DecorateurCasesAccessibles base;
@@ -26,6 +26,31 @@ public abstract class DecorateurCasesAccessibles {
     }
 
     public abstract ArrayList<Case> getMesCasesAccessibles();
+    
+    public Plateau getPlateau() {
+        return plateau;
+    }
+    public void setPlateau(Plateau plateau) {
+        this.plateau= plateau;
+    }
+   
+
+    public Piece getPiece() {
+        return piece;
+    }
+    
+    public void setPiece(Piece piece) {
+        this.piece = piece;
+    }
+    
+
+    public Case getPosition() {
+        return piece.getCase();
+    }
+
+    public boolean estPositionValide(int x, int y) {
+        return plateau.positionValide(x, y);
+    }
 
 
 }

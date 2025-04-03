@@ -15,4 +15,10 @@ public class Reine extends Piece
         // ArrayList<Case> lst = casesAccessibles.getCasesAccessibles();
 
     }
+    public ArrayList<Case> getCasesAccessibles() {
+		casesAccessibles.setPlateau(this.plateau);
+		casesAccessibles.setPiece(this);
+	    
+		return casesAccessibles.getCasesAccessibles();
+	}
 }

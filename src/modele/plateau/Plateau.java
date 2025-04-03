@@ -42,7 +42,7 @@ public class Plateau extends Observable {
         for (int x = 0; x < SIZE_X; x++) {
             for (int y = 0; y < SIZE_Y; y++) {
                 grilleCases[x][y] = new Case(this);
-                map.put(grilleCases[x][y], new Point(x, y));
+                getMap().put(grilleCases[x][y], new Point(x, y));
             }
 
         }
@@ -128,6 +128,13 @@ public class Plateau extends Observable {
         c.p = p;
 
     }
+    public boolean positionValide(int x,int y) {
+    	boolean valide=false;
+    	if(x >= 0 && x < SIZE_X && y >= 0 && y < SIZE_Y) {
+    		valide=true;
+    	}
+    	return valide;
+		}
 
     public void deplacerPiece(Case c1, Case c2) {
         if (c1.p != null) {
@@ -142,18 +149,31 @@ public class Plateau extends Observable {
 
     /** Indique si p est contenu dans la grille
      */
-    private boolean contenuDansGrille(Point p) {
-        return p.x >= 0 && p.x < SIZE_X && p.y >= 0 && p.y < SIZE_Y;
-    }
-    
-    private Case caseALaPosition(Point p) {
-        Case retour = null;
-        
-        if (contenuDansGrille(p)) {
-            retour = grilleCases[p.x][p.y];
+
+  
+
+    public ArrayList<Case> getCaseAvecPieces(String couleur) {
+        ArrayList<Case> casesAvecPieces = new ArrayList<>();
+
+        for (int x = 0; x < SIZE_X; x++) {
+            for (int y = 0; y < SIZE_Y; y++) {
+                Case c = grilleCases[x][y];
+                Piece piece = c.getPiece();
+
+                if (piece != null && piece.getCouleur().equals(couleur)) {
+                    casesAvecPieces.add(c);
+                }
+            }
         }
-        return retour;
+
+        return casesAvecPieces;
     }
+
+	public HashMap<Case, Point> getMap() {
+		return map;
+	}
+
+
 
 
 }

@@ -15,10 +15,18 @@ public class Fou extends Piece
 {
     public Fou(Plateau _plateau,String _couleur) {
         super(_plateau,_couleur);
-        casesAccessibles = new DecorateurCasesEnLigne(new DecorateurCasesEnDiagonale(null));
+        casesAccessibles = new DecorateurCasesEnDiagonale(null);
 
         // le décorateur récupère les cases en diagonale et en ligne
         // ArrayList<Case> lst = casesAccessibles.getCasesAccessibles();
 
     }
+
+	@Override
+	public ArrayList<Case> getCasesAccessibles() {
+		casesAccessibles.setPlateau(this.plateau);
+		casesAccessibles.setPiece(this);
+	    
+		return casesAccessibles.getCasesAccessibles();
+	}
 }

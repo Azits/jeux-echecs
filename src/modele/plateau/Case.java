@@ -5,6 +5,8 @@
  */
 package modele.plateau;
 
+import java.awt.Point;
+
 import modele.jeu.Piece;
 
 public class Case {
@@ -42,4 +44,20 @@ public class Case {
 
     }*/
 
+    public int getX() {
+        Point position = plateau.getMap().get(this); 
+        if (position != null) {
+            return position.x;
+        } else {
+            return -1;
+        }
+    }
+    public int getY() {
+        Point position = plateau.getMap().get(this); 
+        if (position != null) {
+            return position.y;
+        } else {
+            return -1;
+        }
+    }
    }
