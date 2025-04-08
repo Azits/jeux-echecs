@@ -44,12 +44,13 @@ public class JeuxEchecs extends Jeu{
                 }
             }
         }
-        else if (piece instanceof Reine) {
+        else{
              ArrayList<Case> casesAccessiblesActuelles=piece.getCasesAccessibles();
              if(casesAccessiblesActuelles.contains(caseClic2)){
                  valide = true;
              }
         }
+
 
         System.out.println(valide);
         return valide;
