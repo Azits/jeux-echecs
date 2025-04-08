@@ -1,4 +1,7 @@
 /bin/
+/.idea
+/out
+*.iml
 *.class
 *.jar
 *.war

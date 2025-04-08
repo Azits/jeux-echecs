@@ -1,5 +1,6 @@
 package modele.plateau;
 
+import modele.jeu.Jeu;
 import modele.jeu.Piece;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ public abstract class DecorateurCasesAccessibles {
 
 	Plateau plateau; // TODO
     Piece piece; // TODO
+    Jeu jeu;
 
     private DecorateurCasesAccessibles base;
 

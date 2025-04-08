@@ -131,6 +131,7 @@ public class Plateau extends Observable {
     public boolean positionValide(int x,int y) {
     	boolean valide=false;
     	if(x >= 0 && x < SIZE_X && y >= 0 && y < SIZE_Y) {
+
     		valide=true;
     	}
     	return valide;

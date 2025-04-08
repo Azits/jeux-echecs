@@ -152,7 +152,7 @@ public class VueControleur extends JFrame implements Observer {
                         	
                             caseClic2 = plateau.getCases()[xx][yy];
                             if( !caseClic2.equals(caseClic1)) {
-                            	if(plateau.positionValide(xx,yy)) {
+                            	if(plateau.positionValide(xx,yy) && jeu.coupValide(caseClic1,caseClic2)) {
                             		jeu.envoyerCoup(new Coup(caseClic1, caseClic2));
                             		caseClic1 = null;
                             		caseClic2 = null;

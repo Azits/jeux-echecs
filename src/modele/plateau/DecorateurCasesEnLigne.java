@@ -21,7 +21,6 @@ public class DecorateurCasesEnLigne extends DecorateurCasesAccessibles {
         int yDepart = caseDepart.getY();
 
         Piece piece = this.getPiece();
-
        
         Plateau plateau = this.getPlateau();
 
@@ -46,13 +45,6 @@ public class DecorateurCasesEnLigne extends DecorateurCasesAccessibles {
               
                 if (caseCible.vide()) {
                     casesAccessibles.add(caseCible);
-                } else {
-                  
-                    if (!caseCible.getPiece().getCouleur().equals(piece.getCouleur())) {
-                        casesAccessibles.add(caseCible);
-                    }
-                  
-                    break;
                 }
 
                 x = x + dx;

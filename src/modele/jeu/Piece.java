@@ -14,12 +14,14 @@ public abstract class Piece {
 
     protected Case c;
     protected Plateau plateau;
+    protected Jeu jeu;
     protected DecorateurCasesAccessibles casesAccessibles;
     protected String couleur;
 
-    public Piece(Plateau _plateau,String _couleur) {
-        plateau = _plateau;
-        couleur=_couleur;
+    public Piece(Plateau _plateau,String _couleur,Jeu _jeu) {
+        this.plateau = _plateau;
+        this.couleur=_couleur;
+        this.jeu=_jeu;
     }
 
     public void quitterCase() {
@@ -41,10 +43,6 @@ public abstract class Piece {
     }
 
 	public abstract ArrayList<Case> getCasesAccessibles();
-
-
-
-
 
 
 }
