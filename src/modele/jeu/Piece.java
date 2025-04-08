@@ -18,10 +18,9 @@ public abstract class Piece {
     protected DecorateurCasesAccessibles casesAccessibles;
     protected String couleur;
 
-    public Piece(Plateau _plateau,String _couleur,Jeu _jeu) {
+    public Piece(Plateau _plateau,String _couleur) {
         this.plateau = _plateau;
         this.couleur=_couleur;
-        this.jeu=_jeu;
     }
 
     public void quitterCase() {
