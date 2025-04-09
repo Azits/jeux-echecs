@@ -63,29 +63,71 @@ public abstract class Jeu extends Thread{
         Case arr = coup.arr;
 
         Piece piece = dep.getPiece();
-        Piece pieceCapturee = arr.getPiece(); // sauvegarde de la pièce capturée
+        Piece pieceCapturee = arr.getPiece();
 
-        // Déplacement temporaire
         dep.quitterLaCase();
         arr.setPiece(piece);
-        piece.allerSurCase(arr); // met à jour la case de la pièce
+        piece.allerSurCase(arr);
 
-        // Vérifie si le roi du joueur est en échec après ce coup
         if (enEchec(piece.getCouleur())) {
-            System.out.println("Le joueur " + piece.getCouleur() + " a mis son propre roi en échec. Il perd !");
-            lancer = false;  // fin de partie
+            System.out.println("Le joueur " + piece.getCouleur() + " s’est mis en échec. Coup refusé.");
+            // Revenir à l’état précédent :
+            arr.setPiece(pieceCapturee);
+            dep.setPiece(piece);
+            piece.allerSurCase(dep);
             return;
         }
 
-        // Coup valide : on garde l'état tel quel
+        // Enregistrer la pièce capturée si coup valide
         if (pieceCapturee != null) {
             ajouterPiecePrise(pieceCapturee);
         }
 
+        // Vérifie maintenant si l'adversaire est mat
+        String couleurAdverse = piece.getCouleur().equals("B") ? "N" : "B";
+        if (echecEtMat(couleurAdverse)) {
+            System.out.println("Échec et mat ! Le joueur " + piece.getCouleur() + " a gagné !");
+            lancer = false; // Fin de la partie
+        }
+
 
     }
+    private boolean echecEtMat(String couleurAdverse) {
+        if (!enEchec(couleurAdverse)) {
+            return false;
+        }
+        ArrayList<Case> caseAccecible = plateau.getCaseAvecPieces(couleurAdverse);
 
-    private boolean enEchec(String couleur) {
+        for (Case c : caseAccecible) {
+            Piece piece = c.getPiece();
+            ArrayList<Case> destinations = piece.getCasesAccessibles();
+            for (Case d : destinations) {
+                Coup testCoup = new Coup(c, d);
+
+                // Simuler le coup
+                Piece cible = d.getPiece();
+                piece.allerSurCase(d);
+
+                boolean echecApresCoup = enEchec(couleurAdverse);
+
+                // Annuler le coup simulé
+                piece.allerSurCase(c);
+                if (cible != null) {
+                    cible.allerSurCase(d);
+                }
+
+                // Si au moins un coup sauve le roi, ce n’est pas un mat
+                if (!echecApresCoup) {
+                    return false;
+                }
+
+
+            }
+
+        }
+        return true;
+    }
+    public boolean enEchec(String couleur) {
         Case caseRoi = plateau.getCaseRoi(couleur);
 
         for (int x = 0; x < plateau.SIZE_X; x++) {

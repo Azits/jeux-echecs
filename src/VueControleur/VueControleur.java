@@ -247,6 +247,17 @@ public class VueControleur extends JFrame implements Observer {
                 }
             }
         }
+        // Affichage du roi en échec
+        String couleurJoueur = jeu.getCouleurJoueurActuel();
+        if (jeu.estLancer()) {
+            if (jeu.enEchec(couleurJoueur)) {
+                Case caseRoi = plateau.getCaseRoi(couleurJoueur);
+                int x = caseRoi.getX();
+                int y = caseRoi.getY();
+
+                tabJLabel[x][y].setBackground(new Color(255, 0, 0, 150)); // rouge translucide
+            }
+        }
 
         for (Case caseAcc : casesAccessiblesActuelles) {
             int x = caseAcc.getX();
