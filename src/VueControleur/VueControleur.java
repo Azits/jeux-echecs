@@ -139,28 +139,31 @@ public class VueControleur extends JFrame implements Observer {
                     public void mouseClicked(MouseEvent e) {
 
                         if (caseClic1 == null) {
-                        	if (plateau.getCases()[xx][yy].getPiece().getCouleur().equals(jeu.getCouleurJoueurActuel())) {
+                            if (plateau.getCases()[xx][yy].getPiece() != null &&
+                                    plateau.getCases()[xx][yy].getPiece().getCouleur().equals(jeu.getCouleurJoueurActuel())) {
+
                                 caseClic1 = plateau.getCases()[xx][yy];
                                 casesAccessiblesActuelles = caseClic1.getPiece().getCasesAccessibles();
-                                System.out.println(jeu.getCouleurJoueurActuel());
                                 mettreAJourAffichage();
+                            } else {
+                                System.out.println("Ce n'est pas à vous de jouer");
                             }
-                        	else {
-                        		System.out.println("ce n'est pas à vous de jouer  de jouer");
-                        	}
                         } else {
-                        	
                             caseClic2 = plateau.getCases()[xx][yy];
-                            if( !caseClic2.equals(caseClic1)) {
-                            	if(plateau.positionValide(xx,yy) && jeu.coupValide(caseClic1,caseClic2)) {
-                            		jeu.envoyerCoup(new Coup(caseClic1, caseClic2));
-                            		caseClic1 = null;
-                            		caseClic2 = null;
-                            	}
+
+                            if (!caseClic2.equals(caseClic1)) {
+                                if (plateau.contenuDansGrille(new Point(xx,yy)) && jeu.coupValide(caseClic1, caseClic2)) {
+                                    jeu.envoyerCoup(new Coup(caseClic1, caseClic2));
+                                }
                             }
+
+                            // Toujours réinitialiser, même si le coup est invalide
+                            caseClic1 = null;
+                            caseClic2 = null;
                             casesAccessiblesActuelles.clear();
-                            
+                            mettreAJourAffichage();
                         }
+
 
                     }
                 });
@@ -253,72 +256,47 @@ public class VueControleur extends JFrame implements Observer {
         }
     }
     public void mettreAJourPiecesPrises(ArrayList<Piece> piecesPrisesJ1, ArrayList<Piece> piecesPrisesJ2) {
-        // Vider les panneaux
-    	joueur1.removeAll();
+        joueur1.removeAll();
         joueur2.removeAll();
 
-        // Ajouter les pièces prises par le joueur 1 (blanc)
-        for (Piece piece : piecesPrisesJ1) {
-        	JLabel lblPiece=new JLabel(icoPionN);
-        	if(piece instanceof Tour) {
-        		lblPiece= new JLabel(icoTourN);
-        	}
-        	else if (piece instanceof Pion) {
-        		lblPiece= new JLabel(icoPionN);
-        	}
-        	else if (piece instanceof Cavalier) {
-        		lblPiece= new JLabel(icoChevalierN);
-        	}
-        	else if (piece instanceof Fou) {
-        		lblPiece= new JLabel(icoFouN);
-        	}
-        	else if (piece instanceof Reine) {
-        		lblPiece= new JLabel(icoReinN);
-        	}
-        	else if (piece instanceof Roi) {
-        		lblPiece= new JLabel(icoRoiN);
-        	}
-        	
-        	joueur1.add(lblPiece);
-        	
+        ArrayList<Piece> copieJ1 = new ArrayList<>(piecesPrisesJ1);
+        ArrayList<Piece> copieJ2 = new ArrayList<>(piecesPrisesJ2);
+
+        for (Piece piece : copieJ1) {
+            JLabel lblPiece = getIconeCorrespondante(piece, false);
+            joueur1.add(lblPiece);
         }
 
-        // Ajouter les pièces prises par le joueur 2 (noir)
-        for (Piece piece : piecesPrisesJ2) {
-          
-        	JLabel lblPiece=new JLabel(icoPion);
-        	if(piece instanceof Tour) {
-        		lblPiece= new JLabel(icoTour);
-        	}
-        	else if (piece instanceof Pion) {
-        		lblPiece= new JLabel(icoPion);
-        	}
-        	else if (piece instanceof Cavalier) {
-        		lblPiece= new JLabel(icoChevalier);
-        	}
-        	else if (piece instanceof Fou) {
-        		lblPiece= new JLabel(icoFou);
-        	}
-        	else if (piece instanceof Reine) {
-        		lblPiece= new JLabel(icoRein);
-        	}
-        	else if (piece instanceof Roi) {
-        		lblPiece= new JLabel(icoRoi);
-        	}
-        	
-        	joueur2.add(lblPiece);
+        for (Piece piece : copieJ2) {
+            JLabel lblPiece = getIconeCorrespondante(piece, true);
+            joueur2.add(lblPiece);
         }
 
-        // Mettre à jour l'affichage
         joueur1.revalidate();
         joueur1.repaint();
         joueur2.revalidate();
         joueur2.repaint();
     }
 
+    private JLabel getIconeCorrespondante(Piece piece, boolean estBlanc) {
+        if (piece instanceof Tour) return new JLabel(estBlanc ? icoTour : icoTourN);
+        if (piece instanceof Pion) return new JLabel(estBlanc ? icoPion : icoPionN);
+        if (piece instanceof Cavalier) return new JLabel(estBlanc ? icoChevalier : icoChevalierN);
+        if (piece instanceof Fou) return new JLabel(estBlanc ? icoFou : icoFouN);
+        if (piece instanceof Reine) return new JLabel(estBlanc ? icoRein : icoReinN);
+        if (piece instanceof Roi) return new JLabel(estBlanc ? icoRoi : icoRoiN);
+        return new JLabel();
+    }
+    private void gererFinDePartie() {
+        JOptionPane.showMessageDialog(this, "Fin de partie ! Le roi a été mis en échec.");
+        System.exit(0);
+    }
     @Override
     public void update(Observable o, Object arg) {
         mettreAJourAffichage();
+    if (!jeu.estLancer()){
+        gererFinDePartie();
+    }
         
         /*
 

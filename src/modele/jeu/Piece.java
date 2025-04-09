@@ -14,7 +14,7 @@ public abstract class Piece {
 
     protected Case c;
     protected Plateau plateau;
-    protected Jeu jeu;
+
     protected DecorateurCasesAccessibles casesAccessibles;
     protected String couleur;
 

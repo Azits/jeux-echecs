@@ -10,5 +10,24 @@ package modele.plateau;
  *
  */
 public enum Direction {
-    haut, bas, gauche, droite
+    // Déplacements simples (1 case)
+    haut(0, -1),
+    bas(0, 1),
+    gauche(-1, 0),
+    droite(1, 0);
+
+
+    public final int dx;
+    public final int dy;
+
+    private Direction(int dx, int dy) {
+        this.dx = dx;
+        this.dy = dy;
+    }
+    public int getDx() {
+        return dx;
+    }
+    public int getDy() {
+        return dy;
+    }
 }

@@ -60,4 +60,8 @@ public class Case {
             return -1;
         }
     }
-   }
+
+    public void setPiece(Piece piece) {
+        this.p = piece;
+    }
+}

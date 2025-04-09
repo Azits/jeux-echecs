@@ -128,14 +128,9 @@ public class Plateau extends Observable {
         c.p = p;
 
     }
-    public boolean positionValide(int x,int y) {
-    	boolean valide=false;
-    	if(x >= 0 && x < SIZE_X && y >= 0 && y < SIZE_Y) {
-
-    		valide=true;
-    	}
-    	return valide;
-		}
+    public boolean contenuDansGrille(Point p) {
+        return p.x >= 0 && p.x < SIZE_X && p.y >= 0 && p.y < SIZE_Y;
+    }
 
     public void deplacerPiece(Case c1, Case c2) {
         if (c1.p != null) {
@@ -168,6 +163,32 @@ public class Plateau extends Observable {
         }
 
         return casesAvecPieces;
+    }
+    public  Case getCase(int x, int y){
+        return grilleCases[x][y];
+    }
+    public Case getCaseRoi(String couleur) {
+        for(int x=0;x<SIZE_X;x++){
+            for(int y=0;y<SIZE_Y;y++){
+                Case c = grilleCases[x][y];
+                Piece piece = c.getPiece();
+                if (piece instanceof Roi && piece.getCouleur().equals(couleur)) {
+                    return c;
+                }
+            }
+        }
+        return null;
+    }
+    public Case getCaseDansDirection(Case c, int dx,int dy) {
+        int x = c.getX() + dx;
+        int y = c.getY() + dy;
+        Point p=new Point(x, y);
+
+        if (contenuDansGrille(p)) {
+            return getCases()[x][y];
+        } else {
+            return null;
+        }
     }
 
 	public HashMap<Case, Point> getMap() {

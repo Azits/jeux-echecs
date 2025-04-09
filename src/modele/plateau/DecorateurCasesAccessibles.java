@@ -3,6 +3,8 @@ package modele.plateau;
 import modele.jeu.Jeu;
 import modele.jeu.Piece;
 
+import javax.swing.text.Position;
+import java.awt.*;
 import java.util.ArrayList;
 
 public abstract class DecorateurCasesAccessibles {
@@ -28,21 +30,16 @@ public abstract class DecorateurCasesAccessibles {
     }
 
     public abstract ArrayList<Case> getMesCasesAccessibles();
-    
-    public Plateau getPlateau() {
-        return plateau;
-    }
-    public void setPlateau(Plateau plateau) {
-        this.plateau= plateau;
-    }
-   
 
-    public Piece getPiece() {
-        return piece;
+    public void setPiece(Piece p) {
+        this.piece = p;
+        if (base != null)
+            base.setPiece(p);
     }
-    
-    public void setPiece(Piece piece) {
-        this.piece = piece;
+    public void setPlateau(Plateau p) {
+        this.plateau = p;
+        if (base != null)
+            base.setPlateau(p);
     }
     
 
@@ -51,7 +48,8 @@ public abstract class DecorateurCasesAccessibles {
     }
 
     public boolean estPositionValide(int x, int y) {
-        return plateau.positionValide(x, y);
+        Point p=new Point(x,y);
+        return plateau.contenuDansGrille(p);
     }
 
 

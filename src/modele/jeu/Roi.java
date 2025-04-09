@@ -14,7 +14,7 @@ public class Roi extends Piece
 {
     public Roi(Plateau _plateau,String _couleur) {
         super(_plateau,_couleur);
-        casesAccessibles = new DecorateurCasesEnLigne(new DecorateurCasesEnDiagonale(null));
+        casesAccessibles = new DecorateurCasesRoi(null);
 
         // le décorateur récupère les cases en diagonale et en ligne
         // ArrayList<Case> lst = casesAccessibles.getCasesAccessibles();

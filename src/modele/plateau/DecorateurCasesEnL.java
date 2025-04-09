@@ -1,5 +1,6 @@
 package modele.plateau;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 import modele.jeu.Piece;
@@ -13,34 +14,22 @@ public class DecorateurCasesEnL extends DecorateurCasesAccessibles {
 
     @Override
     public ArrayList<Case> getMesCasesAccessibles() {
-        ArrayList<Case> accessibles = new ArrayList<>();
+        ArrayList<Case> cases = new ArrayList<>();
+        Case depart = piece.getCase();
 
-        Case caseDepart = getPosition();
-        int xDepart = caseDepart.getX();
-        int yDepart = caseDepart.getY();
+        for (DirectionEnL dir : DirectionEnL.values()) {
+            int xx = depart.getX() + dir.dx;
+            int yy = depart.getY() + dir.dy;
+            Point p = new Point(xx,yy);
 
-        Plateau plateau = getPlateau();
-        Piece piece = getPiece();
-        String couleur = piece.getCouleur();
-        
-        int[][] mouvements = {
-            {2, 1}, {1, 2}, {-1, 2}, {-2, 1},
-            {-2, -1}, {-1, -2}, {1, -2}, {2, -1}
-        };
-
-        for (int[] m : mouvements) {
-            int x = xDepart + m[0];
-            int y = yDepart + m[1];
-
-            if (estPositionValide(x, y)) {
-                Case cible = plateau.getCases()[x][y];
-
-                if (cible.vide() || !cible.getPiece().getCouleur().equals(couleur)) {
-                    accessibles.add(cible);
+            if (plateau.contenuDansGrille(p)) {
+                Case cible = plateau.getCaseDansDirection(depart, dir.dx, dir.dy);
+                if (cible.vide() || !cible.getPiece().getCouleur().equals(piece.getCouleur())) {
+                    cases.add(cible);
                 }
             }
         }
 
-        return accessibles;
+        return cases;
     }
 }
