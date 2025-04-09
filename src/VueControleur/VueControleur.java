@@ -62,6 +62,8 @@ public class VueControleur extends JFrame implements Observer {
     
     private ArrayList<Case> casesAccessiblesActuelles;
 
+    private JLabel labelFinPartie;
+
     public VueControleur(Jeu _jeu) {
         jeu = _jeu;
         plateau = jeu.getPlateau();
@@ -200,7 +202,14 @@ public class VueControleur extends JFrame implements Observer {
         
   
         add(panelSidebar,BorderLayout.EAST);
-        
+
+        labelFinPartie = new JLabel("");
+        labelFinPartie.setFont(new Font("Arial", Font.BOLD, 16));
+        labelFinPartie.setHorizontalAlignment(SwingConstants.CENTER);
+        labelFinPartie.setForeground(Color.RED);
+
+        panelSidebar.add(labelFinPartie, BorderLayout.CENTER);
+
     }
 
     

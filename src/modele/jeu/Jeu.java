@@ -151,6 +151,42 @@ public abstract class Jeu extends Thread{
 
         return false;
     }
+    public boolean estPat(String couleur) {
+        if (enEchec(couleur)) return false;
+
+        ArrayList<Case> cases = plateau.getCaseAvecPieces(couleur);
+        for (Case c : cases) {
+            Piece piece = c.getPiece();
+            ArrayList<Case> destinations = piece.getCasesAccessibles();
+
+            for (Case d : destinations) {
+                Case origine = piece.getCase();
+                Piece cible = d.getPiece();
+
+                // Simuler le coup
+                origine.quitterLaCase();
+                d.setPiece(piece);
+                piece.allerSurCase(d);
+
+                boolean echecApresCoup = enEchec(couleur);
+
+                // Annuler le coup simulé
+                d.setPiece(cible);
+                origine.setPiece(piece);
+                piece.allerSurCase(origine);
+                if (cible != null) {
+                    cible.allerSurCase(d);
+                }
+
+                if (!echecApresCoup) {
+                    return false; // Il existe au moins un coup légal
+                }
+            }
+        }
+
+        return true; // Aucun coup légal possible et pas en échec
+    }
+
 
     public void run() {
         jouerPartie();
@@ -172,6 +208,12 @@ public abstract class Jeu extends Thread{
                 appliquerCoup(coupRecu);
 
                 coupRecu = null;
+
+                /*String couleurSuivante = getCouleurJoueurSuivant();
+                if (estPat(couleurSuivante)) {
+                    System.out.println("Partie nulle par pat !");
+                    lancer = false;
+                }*/
 
                Joueur joueurActuel=getJoueurSuivant();
                 idxJoueurActuel= (idxJoueurActuel+1) % N_JOUEUR;
