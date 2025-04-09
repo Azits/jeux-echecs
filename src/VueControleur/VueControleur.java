@@ -305,9 +305,9 @@ public class VueControleur extends JFrame implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         mettreAJourAffichage();
-    if (!jeu.estLancer()){
-        gererFinDePartie();
-    }
+        if (!jeu.estLancer()){
+            gererFinDePartie();
+        }
         
         /*
 

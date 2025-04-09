@@ -32,10 +32,14 @@ public abstract class Jeu extends Thread{
 
     }
     private Joueur getJoueurSuivant() {
-        idxJoueurActuel = (idxJoueurActuel+1) % N_JOUEUR;
-        return joueurs[idxJoueurActuel];
+        int x = (idxJoueurActuel+1) % N_JOUEUR;
+        return joueurs[x];
     }
 
+    public String getCouleurJoueurSuivant() {
+        Joueur Joueur = joueurs[ (idxJoueurActuel+1) % N_JOUEUR];
+        return Joueur.getCouleur();
+    }
 
     public Plateau getPlateau() {
         return plateau;
@@ -92,38 +96,39 @@ public abstract class Jeu extends Thread{
 
 
     }
-    private boolean echecEtMat(String couleurAdverse) {
+    public boolean echecEtMat(String couleurAdverse) {
         if (!enEchec(couleurAdverse)) {
             return false;
         }
-        ArrayList<Case> caseAccecible = plateau.getCaseAvecPieces(couleurAdverse);
+        ArrayList<Case> casesAccessibles = plateau.getCaseAvecPieces(couleurAdverse);
 
-        for (Case c : caseAccecible) {
+        for (Case c : casesAccessibles) {
             Piece piece = c.getPiece();
             ArrayList<Case> destinations = piece.getCasesAccessibles();
+
             for (Case d : destinations) {
-                Coup testCoup = new Coup(c, d);
+                Case origine = piece.getCase();
+                Piece cible = d.getPiece();
 
                 // Simuler le coup
-                Piece cible = d.getPiece();
+                origine.quitterLaCase();
+                d.setPiece(piece);
                 piece.allerSurCase(d);
 
                 boolean echecApresCoup = enEchec(couleurAdverse);
 
                 // Annuler le coup simulé
-                piece.allerSurCase(c);
+                d.setPiece(cible);
+                origine.setPiece(piece);
+                piece.allerSurCase(origine);
                 if (cible != null) {
                     cible.allerSurCase(d);
                 }
 
-                // Si au moins un coup sauve le roi, ce n’est pas un mat
                 if (!echecApresCoup) {
                     return false;
                 }
-
-
             }
-
         }
         return true;
     }
@@ -169,6 +174,8 @@ public abstract class Jeu extends Thread{
                 coupRecu = null;
 
                Joueur joueurActuel=getJoueurSuivant();
+                idxJoueurActuel= (idxJoueurActuel+1) % N_JOUEUR;
+
 
                 synchronized (joueurActuel) {
                     joueurActuel.setMonTour(true);
