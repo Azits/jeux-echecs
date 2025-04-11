@@ -32,4 +32,73 @@ public class JeuxEchecs extends Jeu{
         }
         return valide;
     }
+    public boolean enEchec(String couleurJoueur, Plateau plateau) {
+        Case caseRoi = plateau.getCaseRoi(couleurJoueur);
+
+        for (int x = 0; x < plateau.SIZE_X; x++) {
+            for (int y = 0; y < plateau.SIZE_Y; y++) {
+                Case c = plateau.getCases()[x][y];
+                Piece p = c.getPiece();
+
+                if (p != null && !p.getCouleur().equals(couleurJoueur)) {
+                    ArrayList<Case> attaques = p.getCasesAccessibles();
+                    if (attaques.contains(caseRoi)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+    public boolean estPat(String couleur) {
+        Plateau clone=getPlateau().clone();
+        if (enEchec(couleur,clone)) return false;
+
+        ArrayList<Case> cases = clone.getCaseAvecPieces(couleur);
+        for (Case c : cases) {
+            Piece piece = c.getPiece();
+            ArrayList<Case> destinations = piece.getCasesAccessibles();
+
+            for (Case d : destinations) {
+                clone.deplacerPiece(c,d);
+
+                boolean echecApresCoup = enEchec(couleur,clone);
+
+                if (!echecApresCoup) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public boolean echecEtMat(String couleurAdverse) {
+        if (!enEchec(couleurAdverse, getPlateau())) {
+            return false;
+        }
+        Plateau p=getPlateau().clone();
+        ArrayList<Case> caseAvecPiceMemeCouleur = p.getCaseAvecPieces(couleurAdverse);
+
+        for (Case c : caseAvecPiceMemeCouleur) {
+            Piece piece = c.getPiece();
+            ArrayList<Case> destinations = piece.getCasesAccessibles();
+
+            for (Case d : destinations) {
+                p.deplacerPiece(c,d);
+                boolean echecApresCoup = enEchec(couleurAdverse,p);
+                if (!echecApresCoup) {
+                    return false;
+                }
+            }
+        }
+        System.out.println("Echec Et math");
+        return true;
+    }
+
+    public boolean partieGagner() {
+        if(echecEtMat(getCouleurJoueurSuivant()) || estPat(getCouleurJoueurSuivant()) ) {
+                return true;
+        }
+        return false;
+    }
 }

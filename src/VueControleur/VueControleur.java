@@ -143,9 +143,7 @@ public class VueControleur extends JFrame implements Observer {
                         if (caseClic1 == null) {
 
                             if (plateau.getCases()[xx][yy].getPiece() != null && plateau.getCases()[xx][yy].getPiece().getCouleur().equals(jeu.getCouleurJoueurActuel())) {
-                                System.out.println(plateau.getCases()[xx][yy].getPiece().getCouleur());
                                 caseClic1 = plateau.getCases()[xx][yy];
-                                System.out.println("Cordonner Case Clone" +" ("+ xx+","+yy+")");
                                 casesAccessiblesActuelles = caseClic1.getPiece().getCasesAccessibles();
                                 mettreAJourAffichage();
                             } else {
@@ -254,13 +252,13 @@ public class VueControleur extends JFrame implements Observer {
             }
         } // Affichage du roi en échec
         String couleurJoueur = jeu.getCouleurJoueurActuel();
-        if (jeu.estLancer()) {
+        if (!jeu.partieGagner()) {
             if (jeu.enEchec(couleurJoueur,plateau)){
                 Case caseRoi = plateau.getCaseRoi(couleurJoueur);
                 int x = caseRoi.getX();
                 int y = caseRoi.getY();
 
-                tabJLabel[x][y].setBackground(new Color(255, 0, 0, 150)); // rouge translucide
+                tabJLabel[x][y].setBackground(new Color(255, 0, 0, 150));
             }
         }
 
@@ -269,6 +267,9 @@ public class VueControleur extends JFrame implements Observer {
             int y = caseAcc.getY();
 
             tabJLabel[x][y].setBackground(new Color(0, 255, 0, 100));
+        }
+        if (jeu.partieGagner()){
+            gererFinDePartie();
         }
     }
     public void mettreAJourPiecesPrises(ArrayList<Piece> piecesPrisesJ1, ArrayList<Piece> piecesPrisesJ2) {
@@ -302,17 +303,15 @@ public class VueControleur extends JFrame implements Observer {
         if (piece instanceof Reine) return new JLabel(estBlanc ? icoRein : icoReinN);
         if (piece instanceof Roi) return new JLabel(estBlanc ? icoRoi : icoRoiN);
         return new JLabel();
+
     }
     private void gererFinDePartie() {
-        JOptionPane.showMessageDialog(this, "Fin de partie ! Le roi a été mis en échec.");
+        JOptionPane.showMessageDialog(this, "Fin de partie ! Le gagant est le jour + "+jeu.getCouleurJoueurActuel() );
         System.exit(0);
     }
     @Override
     public void update(Observable o, Object arg) {
         mettreAJourAffichage();
-        if (!jeu.estLancer()){
-            gererFinDePartie();
-        }
         
         /*
 

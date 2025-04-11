@@ -63,97 +63,21 @@ public abstract class Jeu extends Thread{
 
     public void appliquerCoup(Coup coup) {
         if(!coup.arr.vide()){
-            plateau.deplacerPiece(coup.dep,coup.arr);
             ajouterPiecePrise(coup.arr.getPiece());
+            plateau.deplacerPiece(coup.dep,coup.arr);
         }else {
             plateau.deplacerPiece(coup.dep,coup.arr);
         }
-        System.out.println("hello");
 
     }
-    public boolean echecEtMat(String couleurAdverse) {
-        if (!enEchec(couleurAdverse, plateau)) {
-            return false;
-        }
-        Plateau p=plateau.clone();
-        ArrayList<Case> caseAvecPiceMemeCouleur = p.getCaseAvecPieces(couleurAdverse);
-
-        for (Case c : caseAvecPiceMemeCouleur) {
-            Piece piece = c.getPiece();
-            ArrayList<Case> destinations = piece.getCasesAccessibles();
-
-            for (Case d : destinations) {
-                p.deplacerPiece(c,d);
-                boolean echecApresCoup = enEchec(couleurAdverse,p);
-                if (!echecApresCoup) {
-                    return false;
-                }
-            }
-        }
-        System.out.println("Echec Et math");
-        return true;
-    }
-    public boolean enEchec(String couleurJoueur, Plateau plateau) {
-        Case caseRoi = plateau.getCaseRoi(couleurJoueur);
-
-        for (int x = 0; x < plateau.SIZE_X; x++) {
-            for (int y = 0; y < plateau.SIZE_Y; y++) {
-                Case c = plateau.getCases()[x][y];
-                Piece p = c.getPiece();
-
-                if (p != null && !p.getCouleur().equals(couleurJoueur)) {
-                    ArrayList<Case> attaques = p.getCasesAccessibles();
-                    if (attaques.contains(caseRoi)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-    /*public boolean estPat(String couleur) {
-        if (enEchec(couleur)) return false;
-
-        ArrayList<Case> cases = plateau.getCaseAvecPieces(couleur);
-        for (Case c : cases) {
-            Piece piece = c.getPiece();
-            ArrayList<Case> destinations = piece.getCasesAccessibles();
-
-            for (Case d : destinations) {
-                Case origine = piece.getCase();
-                Piece cible = d.getPiece();
-
-                // Simuler le coup
-                origine.quitterLaCase();
-                d.setPiece(piece);
-                piece.allerSurCase(d);
-
-                boolean echecApresCoup = enEchec(couleur);
-
-                // Annuler le coup simulé
-                d.setPiece(cible);
-                origine.setPiece(piece);
-                piece.allerSurCase(origine);
-                if (cible != null) {
-                    cible.allerSurCase(d);
-                }
-
-                if (!echecApresCoup) {
-                    return false; // Il existe au moins un coup légal
-                }
-            }
-        }
-
-        return true; // Aucun coup légal possible et pas en échec
-    }*/
+    public abstract boolean partieGagner();
 
 
     public void run() {
         jouerPartie();
     }
     public void jouerPartie() {
-        while (lancer) {
+        while (!partieGagner()) {
             synchronized (this) {
                 try {
                     while (coupRecu == null) {
@@ -162,12 +86,8 @@ public abstract class Jeu extends Thread{
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (echecEtMat(getCouleurJoueurSuivant())) {
-
-                }
                 if (coupValide(coupRecu.dep, coupRecu.arr)) {
                     appliquerCoup(coupRecu);
-                    System.out.println(idxJoueurActuel);
                     idxJoueurActuel = (idxJoueurActuel + 1) % N_JOUEUR;
                 }else {
                     System.out.println("coup Non valide");
@@ -176,6 +96,8 @@ public abstract class Jeu extends Thread{
                 coupRecu = null;
             }
         }
+
+
     }
 
     public String getCouleurJoueurActuel() {
@@ -199,9 +121,7 @@ public abstract class Jeu extends Thread{
 
     public abstract boolean coupValide(Case caseClic1, Case caseClic2);
 
-    public boolean estLancer() {
-        return lancer;
-    }
+    public abstract boolean enEchec(String couleurJoueur, Plateau plateau);
 }
 
 
