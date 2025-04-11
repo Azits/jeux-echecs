@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import modele.plateau.Case;
 import modele.plateau.Plateau;
 
+
 public abstract class Jeu extends Thread{
 
 	public static final int N_JOUEUR=2;
@@ -57,14 +58,15 @@ public abstract class Jeu extends Thread{
 
     }
 
-
-
     public void appliquerCoup(Coup coup) {
         if(!coup.arr.vide()){
             ajouterPiecePrise(coup.arr.getPiece());
             plateau.deplacerPiece(coup.dep,coup.arr);
+            JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
         }else {
             plateau.deplacerPiece(coup.dep,coup.arr);
+            JouerSon.lectureSon("Son/DeplacementSanCapture.wav");
+
         }
 
     }
