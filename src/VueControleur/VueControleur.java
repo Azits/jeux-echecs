@@ -141,10 +141,11 @@ public class VueControleur extends JFrame implements Observer {
                     public void mouseClicked(MouseEvent e) {
 
                         if (caseClic1 == null) {
-                            if (plateau.getCases()[xx][yy].getPiece() != null &&
-                                    plateau.getCases()[xx][yy].getPiece().getCouleur().equals(jeu.getCouleurJoueurActuel())) {
 
+                            if (plateau.getCases()[xx][yy].getPiece() != null && plateau.getCases()[xx][yy].getPiece().getCouleur().equals(jeu.getCouleurJoueurActuel())) {
+                                System.out.println(plateau.getCases()[xx][yy].getPiece().getCouleur());
                                 caseClic1 = plateau.getCases()[xx][yy];
+                                System.out.println("Cordonner Case Clone" +" ("+ xx+","+yy+")");
                                 casesAccessiblesActuelles = caseClic1.getPiece().getCasesAccessibles();
                                 mettreAJourAffichage();
                             } else {
@@ -152,13 +153,9 @@ public class VueControleur extends JFrame implements Observer {
                             }
                         } else {
                             caseClic2 = plateau.getCases()[xx][yy];
-
-                            if (!caseClic2.equals(caseClic1)) {
-                                if (plateau.contenuDansGrille(new Point(xx,yy)) && jeu.coupValide(caseClic1, caseClic2)) {
-                                    jeu.envoyerCoup(new Coup(caseClic1, caseClic2));
-                                }
+                            if (plateau.contenuDansGrille(new Point(xx,yy))) {
+                                jeu.envoyerCoup(new Coup(caseClic1, caseClic2));
                             }
-
                             // Toujours réinitialiser, même si le coup est invalide
                             caseClic1 = null;
                             caseClic2 = null;
@@ -255,11 +252,10 @@ public class VueControleur extends JFrame implements Observer {
                     jlab.setIcon(null); // pas de pièce
                 }
             }
-        }
-        // Affichage du roi en échec
+        } // Affichage du roi en échec
         String couleurJoueur = jeu.getCouleurJoueurActuel();
         if (jeu.estLancer()) {
-            if (jeu.enEchec(couleurJoueur)) {
+            if (jeu.enEchec(couleurJoueur,plateau)){
                 Case caseRoi = plateau.getCaseRoi(couleurJoueur);
                 int x = caseRoi.getX();
                 int y = caseRoi.getY();

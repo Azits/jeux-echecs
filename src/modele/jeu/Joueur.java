@@ -12,9 +12,18 @@ public abstract class Joueur {
         this.couleur=Couleur;
         this.nomJoueur=nom;
     }
-    
+    public Coup getCoup() {
 
-    protected  abstract Coup getCoup();
+        synchronized (jeu) {
+            try {
+                jeu.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return jeu.coupRecu;
+    }
     public boolean getMonTour() {
         return this.monTour;
     }

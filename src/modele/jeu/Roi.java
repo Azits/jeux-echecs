@@ -26,6 +26,9 @@ public class Roi extends Piece
 	    
 		return casesAccessibles.getCasesAccessibles();
 	}
+    public Piece clone(Plateau clone) {
+        return new Roi(clone,this.couleur);
+    }
 
 
 }

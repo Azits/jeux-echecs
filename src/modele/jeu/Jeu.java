@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import modele.plateau.Case;
 import modele.plateau.Plateau;
 
-import javax.print.event.PrintJobEvent;
-
 public abstract class Jeu extends Thread{
 
 	public static final int N_JOUEUR=2;
@@ -24,6 +22,7 @@ public abstract class Jeu extends Thread{
         joueurs[1]=new JoueurHumain(this,"Mori","B");
         idxJoueurActuel=1;
         lancer=true;
+
 
         piecesPrisesJ1=new ArrayList<>();
         piecesPrisesJ2=new ArrayList<>();
@@ -57,90 +56,52 @@ public abstract class Jeu extends Thread{
         synchronized (this) {
             notify();
         }
-        System.out.println("hello");
+
     }
 
 
 
     public void appliquerCoup(Coup coup) {
-        Case dep = coup.dep;
-        Case arr = coup.arr;
-
-        Piece piece = dep.getPiece();
-        Piece pieceCapturee = arr.getPiece();
-
-        dep.quitterLaCase();
-        arr.setPiece(piece);
-        piece.allerSurCase(arr);
-
-        if (enEchec(piece.getCouleur())) {
-            System.out.println("Le joueur " + piece.getCouleur() + " s’est mis en échec. Coup refusé.");
-            // Revenir à l’état précédent :
-            arr.setPiece(pieceCapturee);
-            dep.setPiece(piece);
-            piece.allerSurCase(dep);
-            return;
+        if(!coup.arr.vide()){
+            plateau.deplacerPiece(coup.dep,coup.arr);
+            ajouterPiecePrise(coup.arr.getPiece());
+        }else {
+            plateau.deplacerPiece(coup.dep,coup.arr);
         }
-
-        // Enregistrer la pièce capturée si coup valide
-        if (pieceCapturee != null) {
-            ajouterPiecePrise(pieceCapturee);
-        }
-
-        // Vérifie maintenant si l'adversaire est mat
-        String couleurAdverse = piece.getCouleur().equals("B") ? "N" : "B";
-        if (echecEtMat(couleurAdverse)) {
-            System.out.println("Échec et mat ! Le joueur " + piece.getCouleur() + " a gagné !");
-            lancer = false; // Fin de la partie
-        }
-
+        System.out.println("hello");
 
     }
     public boolean echecEtMat(String couleurAdverse) {
-        if (!enEchec(couleurAdverse)) {
+        if (!enEchec(couleurAdverse, plateau)) {
             return false;
         }
-        ArrayList<Case> casesAccessibles = plateau.getCaseAvecPieces(couleurAdverse);
+        Plateau p=plateau.clone();
+        ArrayList<Case> caseAvecPiceMemeCouleur = p.getCaseAvecPieces(couleurAdverse);
 
-        for (Case c : casesAccessibles) {
+        for (Case c : caseAvecPiceMemeCouleur) {
             Piece piece = c.getPiece();
             ArrayList<Case> destinations = piece.getCasesAccessibles();
 
             for (Case d : destinations) {
-                Case origine = piece.getCase();
-                Piece cible = d.getPiece();
-
-                // Simuler le coup
-                origine.quitterLaCase();
-                d.setPiece(piece);
-                piece.allerSurCase(d);
-
-                boolean echecApresCoup = enEchec(couleurAdverse);
-
-                // Annuler le coup simulé
-                d.setPiece(cible);
-                origine.setPiece(piece);
-                piece.allerSurCase(origine);
-                if (cible != null) {
-                    cible.allerSurCase(d);
-                }
-
+                p.deplacerPiece(c,d);
+                boolean echecApresCoup = enEchec(couleurAdverse,p);
                 if (!echecApresCoup) {
                     return false;
                 }
             }
         }
+        System.out.println("Echec Et math");
         return true;
     }
-    public boolean enEchec(String couleur) {
-        Case caseRoi = plateau.getCaseRoi(couleur);
+    public boolean enEchec(String couleurJoueur, Plateau plateau) {
+        Case caseRoi = plateau.getCaseRoi(couleurJoueur);
 
         for (int x = 0; x < plateau.SIZE_X; x++) {
             for (int y = 0; y < plateau.SIZE_Y; y++) {
                 Case c = plateau.getCases()[x][y];
                 Piece p = c.getPiece();
 
-                if (p != null && !p.getCouleur().equals(couleur)) {
+                if (p != null && !p.getCouleur().equals(couleurJoueur)) {
                     ArrayList<Case> attaques = p.getCasesAccessibles();
                     if (attaques.contains(caseRoi)) {
                         return true;
@@ -151,7 +112,7 @@ public abstract class Jeu extends Thread{
 
         return false;
     }
-    public boolean estPat(String couleur) {
+    /*public boolean estPat(String couleur) {
         if (enEchec(couleur)) return false;
 
         ArrayList<Case> cases = plateau.getCaseAvecPieces(couleur);
@@ -185,17 +146,14 @@ public abstract class Jeu extends Thread{
         }
 
         return true; // Aucun coup légal possible et pas en échec
-    }
+    }*/
 
 
     public void run() {
         jouerPartie();
     }
-
     public void jouerPartie() {
-
-    	while(lancer) {
-
+        while (lancer) {
             synchronized (this) {
                 try {
                     while (coupRecu == null) {
@@ -204,29 +162,22 @@ public abstract class Jeu extends Thread{
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                if (echecEtMat(getCouleurJoueurSuivant())) {
 
-                appliquerCoup(coupRecu);
+                }
+                if (coupValide(coupRecu.dep, coupRecu.arr)) {
+                    appliquerCoup(coupRecu);
+                    System.out.println(idxJoueurActuel);
+                    idxJoueurActuel = (idxJoueurActuel + 1) % N_JOUEUR;
+                }else {
+                    System.out.println("coup Non valide");
+                }
 
                 coupRecu = null;
-
-                /*String couleurSuivante = getCouleurJoueurSuivant();
-                if (estPat(couleurSuivante)) {
-                    System.out.println("Partie nulle par pat !");
-                    lancer = false;
-                }*/
-
-               Joueur joueurActuel=getJoueurSuivant();
-                idxJoueurActuel= (idxJoueurActuel+1) % N_JOUEUR;
-
-
-                synchronized (joueurActuel) {
-                    joueurActuel.setMonTour(true);
-                    joueurActuel.notify();
-                }
             }
-
         }
     }
+
     public String getCouleurJoueurActuel() {
     	return joueurs[idxJoueurActuel].getCouleur();
     }

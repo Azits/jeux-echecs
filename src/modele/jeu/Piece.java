@@ -44,4 +44,5 @@ public abstract class Piece {
 	public abstract ArrayList<Case> getCasesAccessibles();
 
 
+    public abstract Piece clone(Plateau clone);
 }

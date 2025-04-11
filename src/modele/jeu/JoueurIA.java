@@ -13,7 +13,7 @@ public class JoueurIA extends Joueur{
 	}
 
 	
-	protected Coup getCoup() {
+	public Coup getCoup() {
 		 Plateau plateau = getJeu().getPlateau();
 		 ArrayList<Case> casesAvecMesPieces = plateau.getCaseAvecPieces(this.getCouleur());
 		 ArrayList<Coup> tousLesCoups = new ArrayList<>();	

@@ -7,37 +7,52 @@ public class DecorateurPion extends DecorateurCasesAccessibles {
     public DecorateurPion(DecorateurCasesAccessibles _baseDecorateur) {
         super(_baseDecorateur);
     }
+    @Override
     public ArrayList<Case> getMesCasesAccessibles() {
-        ArrayList<Case> cases = new ArrayList<>();
-        Case depart = piece.getCase();
-        int direction=piece.getCouleur().equals("B")? -1 : 1;
+        ArrayList<Case> res = new ArrayList<>();
+        Case depart=piece.getCase();
 
-        Case suivante =plateau.getCase(depart.getX(),depart.getY()+direction);
-        if(suivante!=null && suivante.vide()) {
-            cases.add(suivante);
-            boolean debut=(piece.getCouleur().equals("B") && depart.getY()==6)||(piece.getCouleur().equals("N") && depart.getY()==1);
-            Case deuPas=plateau.getCase(depart.getX(),depart.getY()+2*direction);
-            if (debut && deuPas!=null && deuPas.vide()) {
-                cases.add(deuPas);
+        if (depart == null) return res;  // sécurité absolue
+
+        int x = depart.getX();
+        int y = depart.getY();
+
+        int direction = (piece.getCouleur().equals("B")) ? -1 : 1;
+
+        // Vérifier que la case devant est dans la grille
+        if (plateau.contenuDansGrille(new Point(x, y + direction))) {
+            Case avant = plateau.getCase(x, y + direction);
+            if (avant.vide()) {
+                res.add(avant);
+            }
+            // Avancer de 2 cases uniquement si départ (1 pour noir, 6 pour blanc)
+            boolean surLigneDepart = (piece.getCouleur().equals("B") && y == 6) || (piece.getCouleur().equals("N") && y == 1);
+
+            if (surLigneDepart && plateau.contenuDansGrille(new Point(x, y + 2 * direction))) {
+                Case deuxAvant = plateau.getCase(x, y + 2 * direction);
+                if (deuxAvant.vide()) {
+                    res.add(deuxAvant);
+                }
             }
         }
-        // Capture diagonale gauche
-        if (plateau.contenuDansGrille(new Point(depart.getX() - 1,depart.getY() + direction))) {
-            Case diaGauche = plateau.getCase(depart.getX() - 1,depart.getY() + direction);
-            if (!diaGauche.vide() && !diaGauche.getPiece().getCouleur().equals(piece.getCouleur())) {
-                cases.add(diaGauche);
+
+        // Vérifier capture diagonale gauche
+        if (plateau.contenuDansGrille(new Point(x - 1, y + direction))) {
+            Case diagGauche = plateau.getCase(x - 1, y + direction);
+            if (!diagGauche.vide() && !diagGauche.getPiece().getCouleur().equals(piece.getCouleur())) {
+                res.add(diagGauche);
             }
         }
 
-// Capture diagonale droite
-        if (plateau.contenuDansGrille(new Point(depart.getX() + 1,depart.getY() + direction))) {
-            Case diaDroit = plateau.getCase(depart.getX() + 1,depart.getY() + direction);
-            if (!diaDroit.vide() && !diaDroit.getPiece().getCouleur().equals(piece.getCouleur())) {
-                cases.add(diaDroit);
+        // Vérifier capture diagonale droite
+        if (plateau.contenuDansGrille(new Point(x + 1, y + direction))) {
+            Case diagDroite = plateau.getCase(x + 1, y + direction);
+            if (!diagDroite.vide() && !diagDroite.getPiece().getCouleur().equals(piece.getCouleur())) {
+                res.add(diagDroite);
             }
         }
 
-
-        return cases ;
+        return res;
     }
+
 }

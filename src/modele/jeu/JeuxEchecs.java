@@ -1,5 +1,6 @@
 package modele.jeu;
 import modele.plateau.Case;
+import modele.plateau.Plateau;
 
 import java.util.ArrayList;
 
@@ -9,30 +10,24 @@ public class JeuxEchecs extends Jeu{
     }
     public boolean coupValide(Case caseClic1, Case caseClic2) {
         boolean valide = false;
-        ArrayList<Case> caseAccessible = caseClic1.getPiece().getCasesAccessibles();
-        if (caseAccessible.contains(caseClic2)) {
-            Case dep = caseClic1;
-            Case arr = caseClic2;
+        Plateau clone = getPlateau().clone();
 
-            Piece piece = dep.getPiece();
-            Piece pieceCapturee = arr.getPiece();
+        int x1 = caseClic1.getX();
+        int y1 = caseClic1.getY();
+        int x2 = caseClic2.getX();
+        int y2 = caseClic2.getY();
 
-            // Simuler le coup
-            dep.quitterLaCase();
-            arr.setPiece(piece);
-            piece.allerSurCase(arr);
+        Case caseClone1 = clone.getCase(x1,y1);
+        Case caseClone2 = clone.getCase(x2,y2);
 
-            // Valider si pas en échec
-            if (!enEchec(piece.getCouleur())) {
-                valide = true;
-            }
+        if (caseClone1.getPiece() != null) {
+            ArrayList<Case> casesAccessiblesC = caseClone1.getPiece().getCasesAccessibles();
+            if (casesAccessiblesC.contains(caseClone2)) {
+                clone.deplacerPiece(caseClone1, caseClone2);
 
-            // Annuler la simulation
-            arr.setPiece(pieceCapturee);
-            dep.setPiece(piece);
-            piece.allerSurCase(dep);
-            if (pieceCapturee != null) {
-                pieceCapturee.allerSurCase(arr);
+                if (!enEchec(getCouleurJoueurActuel(), clone)) {
+                    valide = true;
+                }
             }
         }
         return valide;

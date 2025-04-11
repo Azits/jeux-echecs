@@ -18,4 +18,10 @@ public class Pion extends Piece {
 		    
 			return casesAccessibles.getCasesAccessibles();
 	}
+
+	@Override
+	public Piece clone(Plateau clone) {
+		Pion clonePion = new Pion(clone, this.couleur);
+		return clonePion;
+	}
 }

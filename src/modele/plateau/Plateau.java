@@ -48,6 +48,28 @@ public class Plateau extends Observable {
         }
 
     }
+    public Plateau clone() {
+        Plateau plateauClone = new Plateau();
+
+        for (int x = 0; x < SIZE_X; x++) {
+            for (int y = 0; y < SIZE_Y; y++) {
+                Case caseOriginale = this.grilleCases[x][y];
+                Case caseClone = new Case(plateauClone);
+
+                plateauClone.grilleCases[x][y] = caseClone;
+                plateauClone.getMap().put(caseClone, new Point(x, y));  // <<< TRÈS IMPORTANT
+
+                if (!caseOriginale.vide()) {
+                    Piece pieceOriginale = caseOriginale.getPiece();
+                    Piece pieceClone = pieceOriginale.clone(plateauClone);
+
+                    pieceClone.allerSurCase(caseClone);
+                }
+            }
+        }
+
+        return plateauClone;
+    }
 
     public void placerPieces() {
 

@@ -29,4 +29,7 @@ public class Fou extends Piece
 	    
 		return casesAccessibles.getCasesAccessibles();
 	}
+	public Piece clone(Plateau clone) {
+		return new Fou(clone,this.couleur);
+	}
 }

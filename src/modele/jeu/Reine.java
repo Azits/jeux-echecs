@@ -21,4 +21,8 @@ public class Reine extends Piece
 	    
 		return casesAccessibles.getCasesAccessibles();
 	}
+    public Piece clone(Plateau clone) {
+        Reine cloneReine = new Reine(clone,this.couleur);
+        return cloneReine;
+    }
 }
