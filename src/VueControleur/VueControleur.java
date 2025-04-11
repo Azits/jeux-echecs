@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
+import com.sun.tools.javac.Main;
 import modele.jeu.Cavalier;
 import modele.jeu.Coup;
 import modele.jeu.Fou;
@@ -71,9 +72,6 @@ public class VueControleur extends JFrame implements Observer {
         sizeY = plateau.SIZE_Y;
         
         casesAccessiblesActuelles=new ArrayList<>();
-
-
-
         chargerLesIcones();
         placerLesComposantsGraphiques();
 
