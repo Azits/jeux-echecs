@@ -34,7 +34,10 @@ public class JeuxEchecs extends Jeu{
     }
     public boolean enEchec(String couleurJoueur, Plateau plateau) {
         Case caseRoi = plateau.getCaseRoi(couleurJoueur);
-
+        if (caseRoi == null) {
+            System.out.println("ATTENTION : Roi " + couleurJoueur + " absent !!");
+            return false;
+        }
         for (int x = 0; x < plateau.SIZE_X; x++) {
             for (int y = 0; y < plateau.SIZE_Y; y++) {
                 Case c = plateau.getCases()[x][y];
@@ -61,9 +64,16 @@ public class JeuxEchecs extends Jeu{
             ArrayList<Case> destinations = piece.getCasesAccessibles();
 
             for (Case d : destinations) {
-                clone.deplacerPiece(c,d);
+                Piece pieceDepart = c.getPiece();
+                Piece pieceArrivee = d.getPiece();
 
-                boolean echecApresCoup = enEchec(couleur,clone);
+                clone.deplacerPiece(c, d);
+
+                boolean echecApresCoup = enEchec(couleur, clone);
+
+                clone.deplacerPiece(d, c);
+                d.setPiece(pieceArrivee);
+                c.setPiece(pieceDepart);
 
                 if (!echecApresCoup) {
                     return false;
@@ -72,20 +82,29 @@ public class JeuxEchecs extends Jeu{
         }
         return true;
     }
-    public boolean echecEtMat(String couleurAdverse) {
-        if (!enEchec(couleurAdverse, getPlateau())) {
+    public boolean echecEtMat(String couleur) {
+        if (!enEchec(couleur, getPlateau())) {
             return false;
         }
         Plateau p=getPlateau().clone();
-        ArrayList<Case> caseAvecPiceMemeCouleur = p.getCaseAvecPieces(couleurAdverse);
+        ArrayList<Case> caseAvecPiceMemeCouleur = p.getCaseAvecPieces(couleur);
 
-        for (Case c : caseAvecPiceMemeCouleur) {
+        for (Case c :caseAvecPiceMemeCouleur) {
             Piece piece = c.getPiece();
             ArrayList<Case> destinations = piece.getCasesAccessibles();
 
             for (Case d : destinations) {
-                p.deplacerPiece(c,d);
-                boolean echecApresCoup = enEchec(couleurAdverse,p);
+                Piece pieceDepart = c.getPiece();
+                Piece pieceArrivee = d.getPiece();
+
+                p.deplacerPiece(c, d);
+
+                boolean echecApresCoup = enEchec(couleur, p);
+
+                p.deplacerPiece(d, c);
+                d.setPiece(pieceArrivee);
+                c.setPiece(pieceDepart);
+
                 if (!echecApresCoup) {
                     return false;
                 }
@@ -96,9 +115,6 @@ public class JeuxEchecs extends Jeu{
     }
 
     public boolean partieGagner() {
-        if(echecEtMat(getCouleurJoueurSuivant()) || estPat(getCouleurJoueurSuivant()) ) {
-                return true;
-        }
-        return false;
+        return echecEtMat(getCouleurJoueurSuivant()) || estPat(getCouleurJoueurSuivant());
     }
 }

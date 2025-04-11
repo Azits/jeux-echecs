@@ -268,9 +268,6 @@ public class VueControleur extends JFrame implements Observer {
 
             tabJLabel[x][y].setBackground(new Color(0, 255, 0, 100));
         }
-        if (jeu.partieGagner()){
-            gererFinDePartie();
-        }
     }
     public void mettreAJourPiecesPrises(ArrayList<Piece> piecesPrisesJ1, ArrayList<Piece> piecesPrisesJ2) {
         joueur1.removeAll();
@@ -306,12 +303,16 @@ public class VueControleur extends JFrame implements Observer {
 
     }
     private void gererFinDePartie() {
-        JOptionPane.showMessageDialog(this, "Fin de partie ! Le gagant est le jour + "+jeu.getCouleurJoueurActuel() );
+        String gagant= jeu.getCouleurJoueurActuel().equals("B")?"Blanc":"Noir";
+        JOptionPane.showMessageDialog(this, "Fin de partie ! Le gagant est le jour "+gagant);
         System.exit(0);
     }
     @Override
     public void update(Observable o, Object arg) {
         mettreAJourAffichage();
+        if (jeu.partieGagner()){
+            gererFinDePartie();
+        }
         
         /*
 

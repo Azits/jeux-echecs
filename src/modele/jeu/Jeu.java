@@ -10,7 +10,6 @@ public abstract class Jeu extends Thread{
     protected Coup coupRecu;
     private Joueur[]joueurs;
     private int idxJoueurActuel;
-    private boolean lancer;
     private ArrayList<Piece> piecesPrisesJ1;
     private ArrayList<Piece> piecesPrisesJ2 ;
 
@@ -21,7 +20,6 @@ public abstract class Jeu extends Thread{
         joueurs[0]=new JoueurHumain(this,"Azits","N");
         joueurs[1]=new JoueurHumain(this,"Mori","B");
         idxJoueurActuel=1;
-        lancer=true;
 
 
         piecesPrisesJ1=new ArrayList<>();
@@ -77,6 +75,7 @@ public abstract class Jeu extends Thread{
         jouerPartie();
     }
     public void jouerPartie() {
+
         while (!partieGagner()) {
             synchronized (this) {
                 try {
@@ -86,16 +85,24 @@ public abstract class Jeu extends Thread{
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
                 if (coupValide(coupRecu.dep, coupRecu.arr)) {
                     appliquerCoup(coupRecu);
-                    idxJoueurActuel = (idxJoueurActuel + 1) % N_JOUEUR;
-                }else {
+
+                    System.out.println("le Joueur " + ((idxJoueurActuel + 1) % N_JOUEUR) + " " + getJoueurSuivant().getCouleur() + " est en echec et math ? " + partieGagner());
+
+                    if (!partieGagner()) {
+                        idxJoueurActuel = (idxJoueurActuel + 1) % N_JOUEUR;
+                    }
+
+                } else {
                     System.out.println("coup Non valide");
                 }
 
                 coupRecu = null;
             }
         }
+
 
 
     }
@@ -122,6 +129,7 @@ public abstract class Jeu extends Thread{
     public abstract boolean coupValide(Case caseClic1, Case caseClic2);
 
     public abstract boolean enEchec(String couleurJoueur, Plateau plateau);
+
 }
 
 
