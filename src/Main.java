@@ -1,10 +1,7 @@
 
 import VueControleur.VueControleur;
 
-import modele.jeu.Jeu;
-import modele.jeu.JeuxEchecs;
-import modele.jeu.JoueurHumain;
-import modele.jeu.JoueurIA;
+import modele.jeu.*;
 import modele.plateau.Plateau;
 
 import javax.swing.*;
@@ -31,22 +28,29 @@ public class Main {
                     if (adversaire.equals("Retour")) break;
 
                     if (jeuChoisi.equals("Echecs")) {
-                        Jeu jeu = new JeuxEchecs();
+                        Jeu jeu = new JeuxEchecs(jeuChoisi,adversaire);
 
                         if (adversaire.equals("Humain")) {
                             VueControleur vc = new VueControleur(jeu);
                             vc.setVisible(true);
                         } else {
-                            /*jeu.setJoueurs(new JoueurHumain(jeu, "Humain", "N"), new JoueurIA(jeu, "Bot", "B"));
-                            VueControleur vc = new VueControleur(jeu);
-                            vc.setVisible(true)*/
+                            JOptionPane.showMessageDialog(null,"Mode VS IA pas encore implementé");
                         }
 
                         return;
                     }
 
                     if (jeuChoisi.equals("Dames")) {
-                        JOptionPane.showMessageDialog(null, "Mode Dames pas encore implémenté !");
+                        Jeu jeu=new JeuDames(jeuChoisi,adversaire);
+
+                        if (adversaire.equals("Humain")) {
+                            VueControleur vc=new VueControleur(jeu);
+                            vc.setVisible(true);
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(null,"Mode VS IA pas encore implementé");
+                        }
+                        return;
                     }
                 }
             }

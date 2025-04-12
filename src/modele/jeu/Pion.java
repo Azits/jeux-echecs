@@ -16,7 +16,7 @@ public class Pion extends Piece {
 			casesAccessibles.setPlateau(this.plateau);
 			casesAccessibles.setPiece(this);
 		    
-			return casesAccessibles.getCasesAccessibles();
+			return this.casesAccessibles.getCasesAccessibles();
 	}
 
 	@Override

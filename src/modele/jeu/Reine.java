@@ -18,8 +18,7 @@ public class Reine extends Piece
     public ArrayList<Case> getCasesAccessibles() {
 		casesAccessibles.setPlateau(this.plateau);
 		casesAccessibles.setPiece(this);
-	    
-		return casesAccessibles.getCasesAccessibles();
+		return this.casesAccessibles.getCasesAccessibles();
 	}
     public Piece clone(Plateau clone) {
         Reine cloneReine = new Reine(clone,this.couleur);

@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 public abstract class DecorateurCasesAccessibles {
 
-	Plateau plateau; // TODO
-    Piece piece; // TODO
-    Jeu jeu;
+	protected Plateau plateau; // TODO
+    protected Piece piece; // TODO
+    protected Jeu jeu;
 
-    private DecorateurCasesAccessibles base;
+    protected DecorateurCasesAccessibles base;
 
     public DecorateurCasesAccessibles(DecorateurCasesAccessibles _baseDecorateur) {
         base = _baseDecorateur;
@@ -41,7 +41,7 @@ public abstract class DecorateurCasesAccessibles {
         if (base != null)
             base.setPlateau(p);
     }
-    
+
 
     public Case getPosition() {
         return piece.getCase();

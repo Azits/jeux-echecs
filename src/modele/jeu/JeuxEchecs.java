@@ -5,8 +5,8 @@ import modele.plateau.Plateau;
 import java.util.ArrayList;
 
 public class JeuxEchecs extends Jeu{
-	public JeuxEchecs() {
-        super();
+	public JeuxEchecs(String jeu,String typeAdverssaire) {
+        super(jeu,typeAdverssaire);
     }
     public boolean coupValide(Case caseClic1, Case caseClic2) {
         boolean valide = false;

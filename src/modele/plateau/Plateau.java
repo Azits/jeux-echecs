@@ -6,13 +6,7 @@
 package modele.plateau;
 
 
-import modele.jeu.Cavalier;
-import modele.jeu.Fou;
-import modele.jeu.Piece;
-import modele.jeu.Pion;
-import modele.jeu.Roi;
-import modele.jeu.Tour;
-import modele.jeu.Reine;
+import modele.jeu.*;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -142,6 +136,31 @@ public class Plateau extends Observable {
 
         setChanged();
         notifyObservers();
+
+    }
+    public void  placerPieceDame(){
+        ArrayList<PionDame_simple> pionsB = new ArrayList<>();
+        ArrayList<PionDame_simple> pionsN = new ArrayList<>();
+
+        // PIONS NOIRS (en haut)
+        for (int y = 0; y <= 2; y++) {
+            for (int x = 0; x < SIZE_X; x++) {
+                if ((x + y) % 2 == 0) {
+                    PionDame_simple pionN = new PionDame_simple(this, "N");
+                    pionN.allerSurCase(grilleCases[x][y]);
+                }
+            }
+        }
+
+        // PIONS BLANCS (en bas)
+        for (int y = 5; y <= 7; y++) {
+            for (int x = 0; x < SIZE_X; x++) {
+                if ((x + y) % 2 != 0) {
+                    PionDame_simple pionB = new PionDame_simple(this, "B");
+                    pionB.allerSurCase(grilleCases[x][y]);
+                }
+            }
+        }
 
     }
 

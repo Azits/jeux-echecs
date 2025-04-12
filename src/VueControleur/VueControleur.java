@@ -9,17 +9,8 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
-import com.sun.tools.javac.Main;
-import modele.jeu.Cavalier;
-import modele.jeu.Coup;
-import modele.jeu.Fou;
-import modele.jeu.Jeu;
+import modele.jeu.*;
 import modele.plateau.Case;
-import modele.jeu.Piece;
-import modele.jeu.Pion;
-import modele.jeu.Reine;
-import modele.jeu.Roi;
-import modele.jeu.Tour;
 import modele.plateau.Plateau;
 
 
@@ -73,7 +64,7 @@ public class VueControleur extends JFrame implements Observer {
         
         casesAccessiblesActuelles=new ArrayList<>();
         chargerLesIcones();
-        placerLesComposantsGraphiques();
+        placerLesComposantsGraphiques(jeu.getClass().getSimpleName());
 
         plateau.addObserver(this);
 
@@ -113,8 +104,14 @@ public class VueControleur extends JFrame implements Observer {
         return resizedIcon;
     }
 
-    private void placerLesComposantsGraphiques() {
-        setTitle("Jeu d'Échecs");
+    private void placerLesComposantsGraphiques(String typeJeu) {
+        if(typeJeu.equals("JeuxEchecs")) {
+            setTitle("Jeu d'Échecs");
+        }
+        else {
+            setTitle("Jeu Dames");
+        }
+
         setResizable(false);
         int largeurFenetre=(sizeX * pxCase)+300;
         setSize(largeurFenetre,(sizeX * pxCase));
@@ -235,7 +232,7 @@ public class VueControleur extends JFrame implements Observer {
                         jlab.setIcon(couleur.equals("B") ? icoRoi : icoRoiN);
                     } else if (piece instanceof Reine) {
                         jlab.setIcon(couleur.equals("B") ? icoRein : icoReinN);
-                    } else if (piece instanceof Pion) {
+                    } else if (piece instanceof Pion || piece instanceof PionDame_simple) {
                         jlab.setIcon(couleur.equals("B") ? icoPion : icoPionN);
                     } else if (piece instanceof Cavalier) {
                         jlab.setIcon(couleur.equals("B") ? icoChevalier : icoChevalierN);

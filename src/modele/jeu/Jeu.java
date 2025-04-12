@@ -14,17 +14,36 @@ public abstract class Jeu extends Thread{
     private ArrayList<Piece> piecesPrisesJ1;
     private ArrayList<Piece> piecesPrisesJ2 ;
 
-    public Jeu() {
+    public Jeu(String jeu,String typeAdverssaire) {
         plateau = new Plateau();
-        plateau.placerPieces();
         joueurs=new Joueur[N_JOUEUR];
-        joueurs[0]=new JoueurHumain(this,"Azits","N");
-        joueurs[1]=new JoueurHumain(this,"Mori","B");
         idxJoueurActuel=1;
-
-
         piecesPrisesJ1=new ArrayList<>();
         piecesPrisesJ2=new ArrayList<>();
+
+        if(jeu.equals("Echecs")) {
+            plateau.placerPieces();
+            if(typeAdverssaire.equals("Humain")) {
+                joueurs[0]=new JoueurHumain(this,"Azits","N");
+                joueurs[1]=new JoueurHumain(this,"Mori","B");
+            }
+            else {
+                joueurs[0]=new JoueurIA(this,"Azits","N");
+                joueurs[1]=new JoueurHumain(this,"Mori","B");
+            }
+        }
+        else if(jeu.equals("Dames")) {
+            plateau.placerPieceDame();
+            if(typeAdverssaire.equals("Humain")) {
+                joueurs[0]=new JoueurHumain(this,"Azits","N");
+                joueurs[1]=new JoueurHumain(this,"Mori","B");
+            }
+            else {
+                joueurs[0]=new JoueurIA(this,"Azits","N");
+                joueurs[1]=new JoueurHumain(this,"Mori","B");
+            }
+
+        }
 
         start();
 
@@ -41,11 +60,6 @@ public abstract class Jeu extends Thread{
 
     public Plateau getPlateau() {
         return plateau;
-    }
-
-    public void placerPieces() {
-
-        plateau.placerPieces();
     }
 
 

@@ -24,7 +24,7 @@ public class Tour extends Piece
 		casesAccessibles.setPlateau(this.plateau);
 		casesAccessibles.setPiece(this);
 	    
-		return casesAccessibles.getCasesAccessibles();
+		return this.casesAccessibles.getCasesAccessibles();
 	}
     public Piece clone(Plateau clone) {
         return new Tour(clone,this.couleur);

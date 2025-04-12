@@ -26,7 +26,7 @@ public class Cavalier extends Piece
 		casesAccessibles.setPlateau(this.plateau);
 		casesAccessibles.setPiece(this);
 	    
-		return casesAccessibles.getCasesAccessibles();
+		return this.casesAccessibles.getCasesAccessibles();
 	}
 	public Piece clone(Plateau clone) {
 		return new Cavalier(clone,this.couleur);
