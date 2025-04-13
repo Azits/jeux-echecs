@@ -2,6 +2,8 @@ package modele.jeu;
 import modele.plateau.Case;
 import modele.plateau.Plateau;
 
+
+
 import java.util.ArrayList;
 
 public class JeuxEchecs extends Jeu{
@@ -30,6 +32,21 @@ public class JeuxEchecs extends Jeu{
                 }
             }
         }
+
+        // Cas spécial : le roque
+        if (caseClone1.getPiece() instanceof Roi) {
+            int dx = x2 - x1;
+            if (Math.abs(dx) == 2 && peutRoquer(clone, caseClone1, caseClone2)) {
+                valide = true;
+            }
+        }
+
+
+
+
+
+
+
         return valide;
     }
     public boolean enEchec(String couleurJoueur, Plateau plateau) {
