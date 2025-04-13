@@ -30,5 +30,16 @@ public class Roi extends Piece
         return new Roi(clone,this.couleur);
     }
 
+    private boolean aDejaBouge = false;
+
+    public boolean aDejaBouge() {
+        return aDejaBouge;
+    }
+
+    public void setDejaBouge(boolean dejaBouge) {
+        this.aDejaBouge = dejaBouge;
+    }
+
+
 
 }

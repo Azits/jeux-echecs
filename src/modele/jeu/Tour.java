@@ -29,4 +29,16 @@ public class Tour extends Piece
     public Piece clone(Plateau clone) {
         return new Tour(clone,this.couleur);
     }
+
+    private boolean aDejaBouge = false;
+
+    public boolean aDejaBouge() {
+        return aDejaBouge;
+    }
+
+    public void setDejaBouge(boolean dejaBouge) {
+        this.aDejaBouge = dejaBouge;
+    }
+
+
 }
