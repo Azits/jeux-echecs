@@ -13,10 +13,10 @@ public class PionDame_dame extends Piece{
     }
 
     @Override
-    public ArrayList<Case> getCasesAccessibles() {
+    public ArrayList<Case> getCasesAccessibles(ArrayList<Case> casesEnemieCapture) {
         casesAccessibles.setPlateau(this.plateau);
         casesAccessibles.setPiece(this);
-        return this.casesAccessibles.getCasesAccessibles();
+        return this.casesAccessibles.getCasesAccessibles(casesEnemieCapture);
     }
 
     @Override

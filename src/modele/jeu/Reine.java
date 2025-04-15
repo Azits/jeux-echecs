@@ -15,10 +15,10 @@ public class Reine extends Piece
         // ArrayList<Case> lst = casesAccessibles.getCasesAccessibles();
 
     }
-    public ArrayList<Case> getCasesAccessibles() {
+    public ArrayList<Case> getCasesAccessibles(ArrayList<Case> casesEnemieCapture) {
 		casesAccessibles.setPlateau(this.plateau);
 		casesAccessibles.setPiece(this);
-		return this.casesAccessibles.getCasesAccessibles();
+		return this.casesAccessibles.getCasesAccessibles(casesEnemieCapture);
 	}
     public Piece clone(Plateau clone) {
         Reine cloneReine = new Reine(clone,this.couleur);

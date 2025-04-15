@@ -6,13 +6,11 @@ import modele.jeu.PionDame_simple;
 import java.util.ArrayList;
 
 public class DecorateurPionDame extends DecorateurCasesAccessibles {
-
     public DecorateurPionDame(DecorateurCasesAccessibles baseDecorateur) {
         super(baseDecorateur);
     }
 
-    @Override
-    public ArrayList<Case> getMesCasesAccessibles() {
+    public ArrayList<Case> getMesCasesAccessibles(ArrayList<Case> caseEnemieParcourue) {
         ArrayList<Case> res = new ArrayList<>();
         Case depart = piece.getCase();
 
@@ -32,6 +30,7 @@ public class DecorateurPionDame extends DecorateurCasesAccessibles {
                     Case apres = plateau.getCaseDansDirection(caseA, dir.dx, dir.dy);
                     if (apres != null && apres.vide()) {
                         res.add(apres);
+                        trouverPrisesMultiples(apres, dir, res, caseEnemieParcourue, caseA);
                     }
                 }
 
@@ -46,7 +45,7 @@ public class DecorateurPionDame extends DecorateurCasesAccessibles {
                     Case apres = plateau.getCaseDansDirection(caseA, dir.dx, dir.dy);
                     if (apres != null && apres.vide()) {
                         res.add(apres);
-                        trouverPrisesMultiples(apres, dir, res, new ArrayList<>(), caseA);
+                        trouverPrisesMultiples(apres, dir, res, caseEnemieParcourue, caseA);
                     }
                 }
             }
@@ -70,19 +69,10 @@ public class DecorateurPionDame extends DecorateurCasesAccessibles {
                 Case apres = plateau.getCaseDansDirection(current, dir.dx, dir.dy);
                 if (apres != null && apres.vide()) {
                     res.add(apres);
-                    trouverPrisesMultiples(apres, dir, res, new ArrayList<>(dejaPrises), current);
+                    trouverPrisesMultiples(apres, dir, res, dejaPrises, current);
                 }
             }
         }
     }
 
-
-    @Override
-    public ArrayList<Case> getCasesAccessibles() {
-        ArrayList<Case> res = getMesCasesAccessibles();
-        if (base != null) {
-            res.addAll(base.getCasesAccessibles());
-        }
-        return res;
-    }
 }

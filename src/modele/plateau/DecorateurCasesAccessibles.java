@@ -19,17 +19,17 @@ public abstract class DecorateurCasesAccessibles {
         base = _baseDecorateur;
     }
 
-    public ArrayList<Case> getCasesAccessibles() {
-        ArrayList<Case> retour = getMesCasesAccessibles();
+    public ArrayList<Case> getCasesAccessibles(ArrayList <Case> casesEnemieCapture) {
+        ArrayList<Case> retour = getMesCasesAccessibles(casesEnemieCapture);
 
         if (base != null) {
-            retour.addAll(base.getCasesAccessibles());
+            retour.addAll(base.getCasesAccessibles(casesEnemieCapture));
         }
 
         return retour;
     }
 
-    public abstract ArrayList<Case> getMesCasesAccessibles();
+    public abstract ArrayList<Case> getMesCasesAccessibles(ArrayList<Case> casesEnemieCapture);
 
     public void setPiece(Piece p) {
         this.piece = p;

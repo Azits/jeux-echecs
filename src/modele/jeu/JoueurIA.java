@@ -19,7 +19,7 @@ public class JoueurIA extends Joueur{
 		 ArrayList<Coup> tousLesCoups = new ArrayList<>();	
 		 for (Case depart : casesAvecMesPieces) {
 	            Piece piece = depart.getPiece();
-	            ArrayList<Case> casesAccessibles = piece.getCasesAccessibles();
+	            ArrayList<Case> casesAccessibles = piece.getCasesAccessibles(new ArrayList<>());
 	            
 	            for (Case destination : casesAccessibles) {
 	                Coup coup = new Coup(depart, destination);

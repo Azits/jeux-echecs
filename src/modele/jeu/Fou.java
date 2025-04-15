@@ -23,11 +23,11 @@ public class Fou extends Piece
     }
 
 	@Override
-	public ArrayList<Case> getCasesAccessibles() {
+	public ArrayList<Case> getCasesAccessibles(ArrayList<Case> casesEnemieCapture) {
 		casesAccessibles.setPlateau(this.plateau);
 		casesAccessibles.setPiece(this);
 	    
-		return this.casesAccessibles.getCasesAccessibles();
+		return this.casesAccessibles.getCasesAccessibles(casesEnemieCapture);
 	}
 	public Piece clone(Plateau clone) {
 		return new Fou(clone,this.couleur);

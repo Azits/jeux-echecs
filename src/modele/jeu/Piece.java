@@ -41,7 +41,7 @@ public abstract class Piece {
     	return couleur;
     }
 
-	public abstract ArrayList<Case> getCasesAccessibles();
+	public abstract ArrayList<Case> getCasesAccessibles(ArrayList<Case> casesEnemieCapture);
 
 
     public abstract Piece clone(Plateau clone);

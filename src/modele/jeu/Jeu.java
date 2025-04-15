@@ -3,9 +3,7 @@ import java.util.ArrayList;
 import modele.plateau.Case;
 import modele.plateau.Plateau;
 import javax.swing.JOptionPane;
-
-
-
+import javax.swing.plaf.synth.SynthTextAreaUI;
 
 
 public abstract class Jeu extends Thread{
@@ -99,16 +97,17 @@ public abstract class Jeu extends Thread{
     }
 
     public void appliquerCoup(Coup coup) {
-        if(!coup.arr.vide()){
-            ajouterPiecePrise(coup.arr.getPiece());
-            plateau.deplacerPiece(coup.dep,coup.arr);
-            JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
-        }else {
-            plateau.deplacerPiece(coup.dep,coup.arr);
-            JouerSon.lectureSon("Son/DeplacementSanCapture.wav");
-
+        ArrayList<Case> caseContenantEnemisPris=new ArrayList<>();
+        ArrayList<Case> caseAc=coup.dep.getPiece().getCasesAccessibles(caseContenantEnemisPris);
+        plateau.deplacerPiece(coup.dep,coup.arr);
+        JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
+        for (Case c : caseContenantEnemisPris) {
+            ajouterPiecePrise(c.getPiece());
+            c.quitterLaCase();
         }
-            // Promotion
+        System.out.println(piecesPrisesJ1);
+        System.out.println(piecesPrisesJ2);
+        // Promotion
 
         Piece piece = coup.arr.getPiece();
         if (piece != null && piece instanceof Pion) {
@@ -121,10 +120,6 @@ public abstract class Jeu extends Thread{
                 coup.arr.setPiece(promotion);
             }
         }
-
-
-
-
             // Le roque
         if (piece instanceof Roi) {
             int dx = coup.arr.getX() - coup.dep.getX();
@@ -146,9 +141,6 @@ public abstract class Jeu extends Thread{
         } else if (piece instanceof Tour) {
             ((Tour) piece).setDejaBouge(true);
         }
-
-
-
     }
 
     public boolean peutRoquer(Plateau plateau, Case roiCase, Case destination) {
@@ -195,11 +187,8 @@ public abstract class Jeu extends Thread{
                     e.printStackTrace();
                 }
 
-                if (coupValide(coupRecu.dep, coupRecu.arr)) {
+                if (this.coupValide(coupRecu.dep, coupRecu.arr)) {
                     appliquerCoup(coupRecu);
-
-                    System.out.println("le Joueur " + ((idxJoueurActuel + 1) % N_JOUEUR) + " " + getJoueurSuivant().getCouleur() + " est en echec et math ? " + partieGagner());
-
                     if (!partieGagner()) {
                         idxJoueurActuel = (idxJoueurActuel + 1) % N_JOUEUR;
                     }
@@ -221,8 +210,10 @@ public abstract class Jeu extends Thread{
     }
     public void ajouterPiecePrise(Piece piece) {
         if (piece.getCouleur().equals("B")) {
+            System.out.println("jai ajouter blanc capturé ");
             piecesPrisesJ2.add(piece);
         } else {
+            System.out.println("jai ajouter Noir capturé ");
             piecesPrisesJ1.add(piece);
         }
     }

@@ -139,14 +139,14 @@ public class VueControleur extends JFrame implements Observer {
 
                             if (plateau.getCases()[xx][yy].getPiece() != null && plateau.getCases()[xx][yy].getPiece().getCouleur().equals(jeu.getCouleurJoueurActuel())) {
                                 caseClic1 = plateau.getCases()[xx][yy];
-                                casesAccessiblesActuelles = caseClic1.getPiece().getCasesAccessibles();
+                                casesAccessiblesActuelles = caseClic1.getPiece().getCasesAccessibles(new ArrayList<>());
                                 mettreAJourAffichage();
                             } else {
                                 System.out.println("Ce n'est pas à vous de jouer");
                             }
                         } else {
                             caseClic2 = plateau.getCases()[xx][yy];
-                            if (plateau.contenuDansGrille(new Point(xx,yy))) {
+                            if (plateau.contenuDansGrille(new Point(xx, yy))) {
                                 jeu.envoyerCoup(new Coup(caseClic1, caseClic2));
                             }
                             // Toujours réinitialiser, même si le coup est invalide
@@ -155,8 +155,6 @@ public class VueControleur extends JFrame implements Observer {
                             casesAccessiblesActuelles.clear();
                             mettreAJourAffichage();
                         }
-
-
                     }
                 });
 
@@ -289,7 +287,7 @@ public class VueControleur extends JFrame implements Observer {
 
     private JLabel getIconeCorrespondante(Piece piece, boolean estBlanc) {
         if (piece instanceof Tour) return new JLabel(estBlanc ? icoTour : icoTourN);
-        if (piece instanceof Pion) return new JLabel(estBlanc ? icoPion : icoPionN);
+        if (piece instanceof Pion || piece instanceof PionDame_simple) return new JLabel(estBlanc ? icoPion : icoPionN);
         if (piece instanceof Cavalier) return new JLabel(estBlanc ? icoChevalier : icoChevalierN);
         if (piece instanceof Fou) return new JLabel(estBlanc ? icoFou : icoFouN);
         if (piece instanceof Reine) return new JLabel(estBlanc ? icoRein : icoReinN);

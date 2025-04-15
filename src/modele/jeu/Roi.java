@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class Roi extends Piece
 {
+    private boolean aDejaBouge = false;
     public Roi(Plateau _plateau,String _couleur) {
         super(_plateau,_couleur);
         casesAccessibles = new DecorateurCasesRoi(null);
@@ -20,17 +21,15 @@ public class Roi extends Piece
         // ArrayList<Case> lst = casesAccessibles.getCasesAccessibles();
 
     }
-    public ArrayList<Case> getCasesAccessibles() {
+    public ArrayList<Case> getCasesAccessibles(ArrayList<Case> casesEnemieCapture) {
 		casesAccessibles.setPlateau(this.plateau);
 		casesAccessibles.setPiece(this);
 	    
-		return this.casesAccessibles.getCasesAccessibles();
+		return this.casesAccessibles.getCasesAccessibles(casesEnemieCapture);
 	}
     public Piece clone(Plateau clone) {
         return new Roi(clone,this.couleur);
     }
-
-    private boolean aDejaBouge = false;
 
     public boolean aDejaBouge() {
         return aDejaBouge;

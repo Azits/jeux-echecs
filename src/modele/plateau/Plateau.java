@@ -155,7 +155,7 @@ public class Plateau extends Observable {
         // PIONS BLANCS (en bas)
         for (int y = 5; y <= 7; y++) {
             for (int x = 0; x < SIZE_X; x++) {
-                if ((x + y) % 2 != 0) {
+                if ((x + y) % 2 == 0) {
                     PionDame_simple pionB = new PionDame_simple(this, "B");
                     pionB.allerSurCase(grilleCases[x][y]);
                 }

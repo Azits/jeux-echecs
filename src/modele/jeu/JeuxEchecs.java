@@ -23,7 +23,7 @@ public class JeuxEchecs extends Jeu{
         Case caseClone2 = clone.getCase(x2,y2);
 
         if (caseClone1.getPiece() != null) {
-            ArrayList<Case> casesAccessiblesC = caseClone1.getPiece().getCasesAccessibles();
+            ArrayList<Case> casesAccessiblesC = caseClone1.getPiece().getCasesAccessibles(new ArrayList<>());
             if (casesAccessiblesC.contains(caseClone2)) {
                 clone.deplacerPiece(caseClone1, caseClone2);
 
@@ -61,7 +61,7 @@ public class JeuxEchecs extends Jeu{
                 Piece p = c.getPiece();
 
                 if (p != null && !p.getCouleur().equals(couleurJoueur)) {
-                    ArrayList<Case> attaques = p.getCasesAccessibles();
+                    ArrayList<Case> attaques = p.getCasesAccessibles(new ArrayList<>());
                     if (attaques.contains(caseRoi)) {
                         return true;
                     }
@@ -78,7 +78,7 @@ public class JeuxEchecs extends Jeu{
         ArrayList<Case> cases = clone.getCaseAvecPieces(couleur);
         for (Case c : cases) {
             Piece piece = c.getPiece();
-            ArrayList<Case> destinations = piece.getCasesAccessibles();
+            ArrayList<Case> destinations = piece.getCasesAccessibles(new ArrayList<>());
 
             for (Case d : destinations) {
                 Piece pieceDepart = c.getPiece();
@@ -108,7 +108,7 @@ public class JeuxEchecs extends Jeu{
 
         for (Case c :caseAvecPiceMemeCouleur) {
             Piece piece = c.getPiece();
-            ArrayList<Case> destinations = piece.getCasesAccessibles();
+            ArrayList<Case> destinations = piece.getCasesAccessibles(new ArrayList<>());
 
             for (Case d : destinations) {
                 Piece pieceDepart = c.getPiece();

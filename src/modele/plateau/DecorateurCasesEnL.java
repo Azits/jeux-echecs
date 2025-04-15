@@ -13,7 +13,7 @@ public class DecorateurCasesEnL extends DecorateurCasesAccessibles {
 	}
 
     @Override
-    public ArrayList<Case> getMesCasesAccessibles() {
+    public ArrayList<Case> getMesCasesAccessibles(ArrayList<Case> casesEnemieCapture) {
         ArrayList<Case> cases = new ArrayList<>();
         Case depart = piece.getCase();
 

@@ -8,7 +8,7 @@ public class DecorateurPion extends DecorateurCasesAccessibles {
         super(_baseDecorateur);
     }
     @Override
-    public ArrayList<Case> getMesCasesAccessibles() {
+    public ArrayList<Case> getMesCasesAccessibles(ArrayList<Case> casesEnemieCapture) {
         ArrayList<Case> res = new ArrayList<>();
         Case depart=piece.getCase();
 
