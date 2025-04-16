@@ -89,9 +89,11 @@ public abstract class Jeu extends Thread{
             ajouterPiecePrise(c.getPiece());
             c.quitterLaCase();
         }
-        plateau.deplacerPiece(coup.dep,coup.arr);
         JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
+        plateau.deplacerPiece(coup.dep,coup.arr);
         appliquerLaPromotion(coup);
+
+
     }
 
 

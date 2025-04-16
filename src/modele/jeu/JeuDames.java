@@ -6,6 +6,7 @@ import modele.plateau.Plateau;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class JeuDames extends  Jeu{
@@ -15,7 +16,12 @@ public class JeuDames extends  Jeu{
 
     @Override
     public boolean partieGagner() {
-        return false;
+        boolean finDeParti = false;
+        ArrayList listeJoeur=getPlateau().getCaseAvecPieces(getCouleurJoueurSuivant());
+        if(listeJoeur.size()==0){
+            finDeParti=true;
+        }
+        return finDeParti;
     }
 
     @Override
