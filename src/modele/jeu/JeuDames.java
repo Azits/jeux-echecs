@@ -4,6 +4,7 @@ import modele.plateau.Case;
 import modele.plateau.DIirectionEnDiagonale;
 import modele.plateau.Plateau;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -29,6 +30,12 @@ public class JeuDames extends  Jeu{
         }
         return valide;
     }
+
+    @Override
+    public Piece choisirPromotion(String couleur) {
+        return new PionDame_dame(getPlateau(), couleur);
+    }
+
     @Override
     public boolean enEchec(String couleurJoueur, Plateau plateau) {
         return false;

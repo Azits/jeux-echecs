@@ -3,7 +3,7 @@ import modele.plateau.Case;
 import modele.plateau.Plateau;
 
 
-
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class JeuxEchecs extends Jeu{
@@ -33,22 +33,15 @@ public class JeuxEchecs extends Jeu{
             }
         }
 
-        // Cas spécial : le roque
         if (caseClone1.getPiece() instanceof Roi) {
             int dx = x2 - x1;
             if (Math.abs(dx) == 2 && peutRoquer(clone, caseClone1, caseClone2)) {
                 valide = true;
             }
         }
-
-
-
-
-
-
-
         return valide;
     }
+
     public boolean enEchec(String couleurJoueur, Plateau plateau) {
         Case caseRoi = plateau.getCaseRoi(couleurJoueur);
         if (caseRoi == null) {
@@ -71,6 +64,7 @@ public class JeuxEchecs extends Jeu{
 
         return false;
     }
+
     public boolean estPat(String couleur) {
         Plateau clone=getPlateau().clone();
         if (enEchec(couleur,clone)) return false;
@@ -99,6 +93,7 @@ public class JeuxEchecs extends Jeu{
         }
         return true;
     }
+
     public boolean echecEtMat(String couleur) {
         if (!enEchec(couleur, getPlateau())) {
             return false;
@@ -131,7 +126,86 @@ public class JeuxEchecs extends Jeu{
         return true;
     }
 
+    public boolean peutRoquer(Plateau plateau, Case roiCase, Case destination) {
+        Piece roi = roiCase.getPiece();
+        if (!(roi instanceof Roi) || ((Roi) roi).aDejaBouge()) return false;
+
+        int y = roiCase.getY();
+        int xRoi = roiCase.getX();
+        int xDest = destination.getX();
+        int direction = (xDest - xRoi > 0) ? 1 : -1;
+
+        // Position de la tour selon le côté
+        int xTour = (direction == 1) ? 7 : 0;
+        Case caseTour = plateau.getCase(xTour, y);
+        Piece tour = caseTour.getPiece();
+
+        // La tour est-elle valide ?
+        if (!(tour instanceof Tour) || ((Tour) tour).aDejaBouge()) return false;
+
+        // Cases entre roi et tour doivent être vides
+        for (int x = xRoi + direction; x != xTour; x += direction) {
+            if (!plateau.getCase(x, y).vide()) return false;
+        }
+
+        // Vérifier que le roi ne passe pas par une case attaquée (à faire plus tard)
+        return true;
+    }
+    public void appliquerLeRoque(Coup coup){
+        Piece piece=coup.arr.getPiece();
+        if (piece instanceof Roi) {
+            int dx = coup.arr.getX() - coup.dep.getX();
+
+            if (Math.abs(dx) == 2) {
+                int y = coup.dep.getY();
+                if (dx > 0) {
+                    // Roque Roi
+                    getPlateau().deplacerPiece(getPlateau().getCase(7, y), getPlateau().getCase(5, y));
+                } else {
+                    // Roque Reine
+                    getPlateau().deplacerPiece(getPlateau().getCase(0, y), getPlateau().getCase(3, y));
+                }
+            }
+        }
+
+        if (piece instanceof Roi) {
+            ((Roi) piece).setDejaBouge(true);
+        } else if (piece instanceof Tour) {
+            ((Tour) piece).setDejaBouge(true);
+        }
+    }
+
+    @Override
+    public void appliquerCoup(Coup coup) {
+        super.appliquerCoup(coup);
+        appliquerLeRoque(coup);
+    }
+
     public boolean partieGagner() {
         return echecEtMat(getCouleurJoueurSuivant()) || estPat(getCouleurJoueurSuivant());
+    }
+
+
+    @Override
+    public Piece choisirPromotion(String couleur) {
+        String[] options = {"Reine", "Tour", "Fou", "Cavalier"};
+
+        int choix = JOptionPane.showOptionDialog(
+                null,
+                "Promotion du pion " + couleur + " :\nChoisissez une pièce.",
+                "Promotion",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        switch (choix) {
+            case 1: return new Tour(getPlateau(), couleur);
+            case 2: return new Fou(getPlateau(), couleur);
+            case 3: return new Cavalier(getPlateau(), couleur);
+            default: return new Reine(getPlateau(), couleur); // défaut : Reine
+        }
     }
 }

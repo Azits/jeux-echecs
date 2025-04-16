@@ -176,7 +176,6 @@ public class Plateau extends Observable {
     public void deplacerPiece(Case c1, Case c2) {
         if (c1.p != null) {
             c1.p.allerSurCase(c2);
-
         }
         setChanged();
         notifyObservers();

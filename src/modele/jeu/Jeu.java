@@ -2,8 +2,6 @@ package modele.jeu;
 import java.util.ArrayList;
 import modele.plateau.Case;
 import modele.plateau.Plateau;
-import javax.swing.JOptionPane;
-import javax.swing.plaf.synth.SynthTextAreaUI;
 
 
 public abstract class Jeu extends Thread{
@@ -50,11 +48,6 @@ public abstract class Jeu extends Thread{
         start();
 
     }
-    private Joueur getJoueurSuivant() {
-        int x = (idxJoueurActuel+1) % N_JOUEUR;
-        return joueurs[x];
-    }
-
     public String getCouleurJoueurSuivant() {
         Joueur Joueur = joueurs[ (idxJoueurActuel+1) % N_JOUEUR];
         return Joueur.getCouleur();
@@ -74,100 +67,33 @@ public abstract class Jeu extends Thread{
 
     }
 
-    public Piece choisirPromotion(String couleur) {
-        String[] options = {"Reine", "Tour", "Fou", "Cavalier"};
+    public abstract Piece choisirPromotion(String couleur);
 
-        int choix = JOptionPane.showOptionDialog(
-                null,
-                "Promotion du pion " + couleur + " :\nChoisissez une pièce.",
-                "Promotion",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]
-        );
+    public void appliquerLaPromotion(Coup coup) {
+        if (coup.arr.getPiece() != null && coup.arr.getPiece() instanceof Pion || coup.arr.getPiece() instanceof PionDame_simple) {
+            int y = coup.arr.getY();
+            if ((coup.arr.getPiece().getCouleur().equals("B") && y == 0) ||
+                    (coup.arr.getPiece().getCouleur().equals("N") && y == 7)) {
 
-        switch (choix) {
-            case 1: return new Tour(getPlateau(), couleur);
-            case 2: return new Fou(getPlateau(), couleur);
-            case 3: return new Cavalier(getPlateau(), couleur);
-            default: return new Reine(getPlateau(), couleur); // défaut : Reine
+                Piece promotion = choisirPromotion(coup.arr.getPiece().getCouleur());
+                promotion.allerSurCase(coup.arr);
+                coup.arr.setPiece(promotion);
+            }
         }
     }
 
     public void appliquerCoup(Coup coup) {
         ArrayList<Case> caseContenantEnemisPris=new ArrayList<>();
         ArrayList<Case> caseAc=coup.dep.getPiece().getCasesAccessibles(caseContenantEnemisPris);
-        plateau.deplacerPiece(coup.dep,coup.arr);
-        JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
         for (Case c : caseContenantEnemisPris) {
             ajouterPiecePrise(c.getPiece());
             c.quitterLaCase();
         }
-        System.out.println(piecesPrisesJ1);
-        System.out.println(piecesPrisesJ2);
-        // Promotion
-
-        Piece piece = coup.arr.getPiece();
-        if (piece != null && piece instanceof Pion) {
-            int y = coup.arr.getY();
-            if ((piece.getCouleur().equals("B") && y == 0) ||
-                    (piece.getCouleur().equals("N") && y == 7)) {
-
-                Piece promotion = choisirPromotion(piece.getCouleur());
-                promotion.allerSurCase(coup.arr);     // 💡 clé
-                coup.arr.setPiece(promotion);
-            }
-        }
-            // Le roque
-        if (piece instanceof Roi) {
-            int dx = coup.arr.getX() - coup.dep.getX();
-
-            if (Math.abs(dx) == 2) {
-                int y = coup.dep.getY();
-                if (dx > 0) {
-                    // Roque Roi
-                    plateau.deplacerPiece(plateau.getCase(7, y), plateau.getCase(5, y));
-                } else {
-                    // Roque Reine
-                    plateau.deplacerPiece(plateau.getCase(0, y), plateau.getCase(3, y));
-                }
-            }
-        }
-
-        if (piece instanceof Roi) {
-            ((Roi) piece).setDejaBouge(true);
-        } else if (piece instanceof Tour) {
-            ((Tour) piece).setDejaBouge(true);
-        }
+        plateau.deplacerPiece(coup.dep,coup.arr);
+        JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
+        appliquerLaPromotion(coup);
     }
 
-    public boolean peutRoquer(Plateau plateau, Case roiCase, Case destination) {
-        Piece roi = roiCase.getPiece();
-        if (!(roi instanceof Roi) || ((Roi) roi).aDejaBouge()) return false;
-
-        int y = roiCase.getY();
-        int xRoi = roiCase.getX();
-        int xDest = destination.getX();
-        int direction = (xDest - xRoi > 0) ? 1 : -1;
-
-        // Position de la tour selon le côté
-        int xTour = (direction == 1) ? 7 : 0;
-        Case caseTour = plateau.getCase(xTour, y);
-        Piece tour = caseTour.getPiece();
-
-        // La tour est-elle valide ?
-        if (!(tour instanceof Tour) || ((Tour) tour).aDejaBouge()) return false;
-
-        // Cases entre roi et tour doivent être vides
-        for (int x = xRoi + direction; x != xTour; x += direction) {
-            if (!plateau.getCase(x, y).vide()) return false;
-        }
-
-        // Vérifier que le roi ne passe pas par une case attaquée (à faire plus tard)
-        return true;
-    }
 
     public abstract boolean partieGagner();
 
@@ -201,8 +127,6 @@ public abstract class Jeu extends Thread{
             }
         }
 
-
-
     }
 
     public String getCouleurJoueurActuel() {
@@ -210,10 +134,8 @@ public abstract class Jeu extends Thread{
     }
     public void ajouterPiecePrise(Piece piece) {
         if (piece.getCouleur().equals("B")) {
-            System.out.println("jai ajouter blanc capturé ");
             piecesPrisesJ2.add(piece);
         } else {
-            System.out.println("jai ajouter Noir capturé ");
             piecesPrisesJ1.add(piece);
         }
     }

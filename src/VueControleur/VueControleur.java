@@ -153,7 +153,6 @@ public class VueControleur extends JFrame implements Observer {
                             caseClic1 = null;
                             caseClic2 = null;
                             casesAccessiblesActuelles.clear();
-                            mettreAJourAffichage();
                         }
                     }
                 });
@@ -228,7 +227,7 @@ public class VueControleur extends JFrame implements Observer {
 
                     if (piece instanceof Roi) {
                         jlab.setIcon(couleur.equals("B") ? icoRoi : icoRoiN);
-                    } else if (piece instanceof Reine) {
+                    } else if (piece instanceof Reine || piece instanceof  PionDame_dame) {
                         jlab.setIcon(couleur.equals("B") ? icoRein : icoReinN);
                     } else if (piece instanceof Pion || piece instanceof PionDame_simple) {
                         jlab.setIcon(couleur.equals("B") ? icoPion : icoPionN);
@@ -265,20 +264,15 @@ public class VueControleur extends JFrame implements Observer {
     public void mettreAJourPiecesPrises(ArrayList<Piece> piecesPrisesJ1, ArrayList<Piece> piecesPrisesJ2) {
         joueur1.removeAll();
         joueur2.removeAll();
-
-        ArrayList<Piece> copieJ1 = new ArrayList<>(piecesPrisesJ1);
-        ArrayList<Piece> copieJ2 = new ArrayList<>(piecesPrisesJ2);
-
-        for (Piece piece : copieJ1) {
+        for (Piece piece : piecesPrisesJ1) {
             JLabel lblPiece = getIconeCorrespondante(piece, false);
             joueur1.add(lblPiece);
         }
 
-        for (Piece piece : copieJ2) {
+        for (Piece piece : piecesPrisesJ2) {
             JLabel lblPiece = getIconeCorrespondante(piece, true);
             joueur2.add(lblPiece);
         }
-
         joueur1.revalidate();
         joueur1.repaint();
         joueur2.revalidate();
@@ -290,7 +284,7 @@ public class VueControleur extends JFrame implements Observer {
         if (piece instanceof Pion || piece instanceof PionDame_simple) return new JLabel(estBlanc ? icoPion : icoPionN);
         if (piece instanceof Cavalier) return new JLabel(estBlanc ? icoChevalier : icoChevalierN);
         if (piece instanceof Fou) return new JLabel(estBlanc ? icoFou : icoFouN);
-        if (piece instanceof Reine) return new JLabel(estBlanc ? icoRein : icoReinN);
+        if (piece instanceof Reine || piece instanceof PionDame_dame) return new JLabel(estBlanc ? icoRein : icoReinN);
         if (piece instanceof Roi) return new JLabel(estBlanc ? icoRoi : icoRoiN);
         return new JLabel();
 
