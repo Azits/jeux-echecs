@@ -74,7 +74,6 @@ public abstract class Jeu extends Thread{
             int y = coup.arr.getY();
             if ((coup.arr.getPiece().getCouleur().equals("B") && y == 0) ||
                     (coup.arr.getPiece().getCouleur().equals("N") && y == 7)) {
-
                 Piece promotion = choisirPromotion(coup.arr.getPiece().getCouleur());
                 promotion.allerSurCase(coup.arr);
                 coup.arr.setPiece(promotion);
@@ -82,19 +81,7 @@ public abstract class Jeu extends Thread{
         }
     }
 
-    public void appliquerCoup(Coup coup) {
-        ArrayList<Case> caseContenantEnemisPris=new ArrayList<>();
-        ArrayList<Case> caseAc=coup.dep.getPiece().getCasesAccessibles(caseContenantEnemisPris);
-        for (Case c : caseContenantEnemisPris) {
-            ajouterPiecePrise(c.getPiece());
-            c.quitterLaCase();
-        }
-        JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
-        plateau.deplacerPiece(coup.dep,coup.arr);
-        appliquerLaPromotion(coup);
-
-
-    }
+    public abstract void appliquerCoup(Coup coup);
 
 
     public abstract boolean partieGagner();

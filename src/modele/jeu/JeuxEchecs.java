@@ -177,7 +177,18 @@ public class JeuxEchecs extends Jeu{
 
     @Override
     public void appliquerCoup(Coup coup) {
-        super.appliquerCoup(coup);
+        ArrayList l=coup.dep.getPiece().getCasesAccessibles(null);
+        if (coup.arr.getPiece()!=null){
+            if(l.contains(coup.arr)){
+                ajouterPiecePrise(coup.arr.getPiece());
+                getPlateau().deplacerPiece(coup.dep,coup.arr);
+                JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
+            }
+        }
+        else {
+            getPlateau().deplacerPiece(coup.dep,coup.arr);
+            JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
+        }
         appliquerLeRoque(coup);
     }
 

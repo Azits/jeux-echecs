@@ -46,4 +46,17 @@ public class JeuDames extends  Jeu{
     public boolean enEchec(String couleurJoueur, Plateau plateau) {
         return false;
     }
+
+    @Override
+    public void appliquerCoup(Coup coup) {
+        ArrayList<Case> caseContenantEnemisPris=new ArrayList<>();
+        ArrayList<Case> caseAc=coup.dep.getPiece().getCasesAccessibles(caseContenantEnemisPris);
+        for (Case c : caseContenantEnemisPris) {
+            ajouterPiecePrise(c.getPiece());
+            c.quitterLaCase();
+        }
+        getPlateau().deplacerPiece(coup.dep,coup.arr);
+        JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
+        appliquerLaPromotion(coup);
+    }
 }
