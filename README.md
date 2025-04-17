@@ -1,4 +1,6 @@
-# Jeu d'Échecs et de Dames en Java 🧠♟️
+# Jeu d'Échecs et de Dames en Java ♟️
+
+---
 
 ## 📌 Présentation
 
@@ -45,7 +47,3 @@ Projet réalisé par **Cheikh Ali Abdoul-Anzizi et Diop Mory**, dans le cadre d�
 
 ---
 
-
-## 📸 Captures d’écran
-
----
