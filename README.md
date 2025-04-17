@@ -49,7 +49,7 @@ src/ ├── Main.java # Point d'entrée de l'application ├── modele/ �
 
 ## ✍️ Auteur
 
-Projet réalisé par **Cheikh Ali Abdoul-Anzizi et Diop Mory**, dans le cadre d’un projet  personnel.
+Projet réalisé par **Cheikh Ali Abdoul-Anzizi et Diop Mory**
 
 ---
 
