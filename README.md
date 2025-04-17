@@ -6,7 +6,6 @@
 <p align="center">
   <img src="https://github.com/user-attachments/assets/f7ef6892-fca8-42c5-be49-f3cc2dd8a727" alt="Capture d’écran 2" width="500"/>
 </p>
----
 
 
 ## 📌 Présentation
