@@ -28,10 +28,10 @@ Ce projet Java implémente un jeu graphique permettant de jouer aux **Échecs** 
 
 ## 🗂️ Structure du projet (MVC)
 src/ ├── Main.java # Point d'entrée de l'application
-     ├── modele/ │
-                 ├── jeu/ # Logique du jeu (Jeu, Joueurs, Pièces, etc.) │ 
-                 └── plateau/ # Plateau, cases, décorateurs, directions 
-      └── vueControleur/ # Interface graphique 
+     ├── modele/ 
+     │         ├── jeu/ # Logique du jeu (Jeu, Joueurs, Pièces, etc.)
+     │         └── plateau/ # Plateau, cases, décorateurs, directions 
+     └── vueControleur/ # Interface graphique 
 
 ---
 
