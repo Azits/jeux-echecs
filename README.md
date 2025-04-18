@@ -33,7 +33,7 @@ src/ ├── Main.java # Point d'entrée de l'application
      │         ├── jeu/ # Logique du jeu (Jeu, Joueurs, Pièces, etc.)
      │         └── plateau/ # Plateau, cases, décorateurs, directions 
      └── vueControleur/ # Interface graphique 
-
+```
 ---
 
 ## ⚙️ Exécution
