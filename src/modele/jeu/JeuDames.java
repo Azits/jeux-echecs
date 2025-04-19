@@ -8,7 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-
+/**
+ * Classe représentant le jeu de dames, hérite de Jeu.
+ * Gère les règles spécifiques aux dames : déplacements en diagonale, prise obligatoire, promotion.
+ */
 public class JeuDames extends  Jeu{
     public JeuDames(String jeu,String typeAdverssaire) {
         super(jeu,typeAdverssaire);

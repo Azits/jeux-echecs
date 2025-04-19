@@ -34,7 +34,8 @@ public class Main {
                             VueControleur vc = new VueControleur(jeu);
                             vc.setVisible(true);
                         } else {
-                            JOptionPane.showMessageDialog(null,"Mode VS IA pas encore implementé");
+                            VueControleur vc=new VueControleur(jeu);
+                            vc.setVisible(true);
                         }
 
                         return;
@@ -48,7 +49,8 @@ public class Main {
                             vc.setVisible(true);
                         }
                         else {
-                            JOptionPane.showMessageDialog(null,"Mode VS IA pas encore implementé");
+                            VueControleur vc=new VueControleur(jeu);
+                            vc.setVisible(true);
                         }
                         return;
                     }

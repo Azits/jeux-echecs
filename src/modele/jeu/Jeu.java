@@ -3,9 +3,14 @@ import java.util.ArrayList;
 import modele.plateau.Case;
 import modele.plateau.Plateau;
 
-
+/**
+ * Classe abstraite représentant le modèle générique d'un jeu (échecs, dames...).
+ * Gère le plateau, les joueurs, la boucle de jeu, les coups, les promotions et les conditions de victoire.
+ */
 public abstract class Jeu extends Thread{
-
+    /**
+     * Nombre fixe de joueurs.
+     */
 	public static final int N_JOUEUR=2;
     private Plateau plateau;
     protected Coup coupRecu;
@@ -14,6 +19,13 @@ public abstract class Jeu extends Thread{
     private ArrayList<Piece> piecesPrisesJ1;
     private ArrayList<Piece> piecesPrisesJ2 ;
 
+    /**
+     * Constructeur d'un jeu.
+     * Initialise le plateau, les joueurs, les pièces et démarre la partie.
+     *
+     * @param jeu Le nom du jeu ("Echecs" ou "Dames")
+     * @param typeAdverssaire "Humain" ou "IA"
+     */
     public Jeu(String jeu,String typeAdverssaire) {
         plateau = new Plateau();
         joueurs=new Joueur[N_JOUEUR];

@@ -20,12 +20,16 @@ import modele.plateau.Plateau;
  *
  */
 public class VueControleur extends JFrame implements Observer {
+    /** Plateau de jeu utilisé pour l'affichage et la détection des clics. */
     private Plateau plateau; // référence sur une classe de modèle : permet d'accéder aux données du modèle pour le rafraichissement, permet de communiquer les actions clavier (ou souris)
+    /** Référence au jeu (modèle). */
     private Jeu jeu;
+    /** Dimensions de la grille. */
     private final int sizeX; // taille de la grille affichée
     private final int sizeY;
-    private static final int pxCase = 50; // nombre de pixel par case
-    // icones affichées dans la grille
+    /** Nombre de pixels par case. */
+    private static final int pxCase = 50;
+    /** icones affichées dans la grille*/
     private ImageIcon icoRoi;
     private ImageIcon icoRein;
     private ImageIcon icoPion;
@@ -40,22 +44,27 @@ public class VueControleur extends JFrame implements Observer {
     private ImageIcon icoChevalierN;
     private ImageIcon icoTourN;
 
-    
 
+    /** Cases sélectionnées par l'utilisateur. */
     private Case caseClic1; // mémorisation des cases cliquées
     private Case caseClic2;
 
-
-    private JLabel[][] tabJLabel; // cases graphique (au moment du rafraichissement, chaque case va être associée à une icône, suivant ce qui est présent dans le modèle)
+    /**cases graphique (au moment du rafraichissement, chaque case va être associée à une icône, suivant ce qui est présent dans le modèle)*/
+    private JLabel[][] tabJLabel;
+    /** Panneaux latéraux pour les joueurs et informations. */
     private JPanel panelSidebar;
     private JPanel joueur1;
     private JPanel joueur2;
     private JLabel labelTemps;
-    
+    /** Liste des cases accessibles pour une pièce sélectionnée. */
     private ArrayList<Case> casesAccessiblesActuelles;
-
+    /** Paneau pour montrer la fin du jeu */
     private JLabel labelFinPartie;
 
+    /**
+     * Constructeur principal. Initialise les composants graphiques, les icônes et les observateurs.
+     * @param _jeu Le jeu auquel cette vue/contrôleur est liée.
+     */
     public VueControleur(Jeu _jeu) {
         jeu = _jeu;
         plateau = jeu.getPlateau();
@@ -72,7 +81,9 @@ public class VueControleur extends JFrame implements Observer {
 
     }
 
-
+    /**
+     * Charge les icônes à utiliser pour l'affichage des pièces sur le plateau.
+     */
     private void chargerLesIcones() {
         icoRoi = chargerIcone("Images/wK.png");
         icoRein=chargerIcone("Images/wQ.png");
@@ -91,7 +102,11 @@ public class VueControleur extends JFrame implements Observer {
 
 
     }
-
+    /**
+     * Charge et redimensionne une icône à partir de son chemin.
+     * @param urlIcone chemin relatif vers l'image.
+     * @return l'icône redimensionnée.
+     */
     private ImageIcon chargerIcone(String urlIcone) {
         BufferedImage image = null;
 
@@ -103,7 +118,9 @@ public class VueControleur extends JFrame implements Observer {
 
         return resizedIcon;
     }
-
+    /**
+     * Place tous les composants graphiques de la fenêtre.
+     */
     private void placerLesComposantsGraphiques(String typeJeu) {
         if(typeJeu.equals("JeuxEchecs")) {
             setTitle("Jeu d'Échecs");
@@ -261,6 +278,11 @@ public class VueControleur extends JFrame implements Observer {
             tabJLabel[x][y].setBackground(new Color(0, 255, 0, 100));
         }
     }
+    /**
+     * Met à jour l'affichage des pièces capturées.
+     * @param piecesPrisesJ1 Pièces capturées par le joueur 1.
+     * @param piecesPrisesJ2 Pièces capturées par le joueur 2.
+     */
     public void mettreAJourPiecesPrises(ArrayList<Piece> piecesPrisesJ1, ArrayList<Piece> piecesPrisesJ2) {
         joueur1.removeAll();
         joueur2.removeAll();
@@ -278,7 +300,17 @@ public class VueControleur extends JFrame implements Observer {
         joueur2.revalidate();
         joueur2.repaint();
     }
-
+    /**
+     * Retourne un JLabel contenant l'icône correspondant au type de pièce passé en paramètre.
+     * <p>
+     * Cette méthode prend en compte si la pièce est blanche ou noire, et sélectionne l'icône appropriée.
+     * Elle gère aussi bien les pièces d’échecs classiques que les variantes du jeu de dames (pion simple ou dame).
+     * </p>
+     *
+     * @param piece La pièce dont on souhaite obtenir l'icône.
+     * @param estBlanc Vrai si la pièce est blanche, faux si elle est noire.
+     * @return Un JLabel contenant l'icône associée à la pièce.
+     */
     private JLabel getIconeCorrespondante(Piece piece, boolean estBlanc) {
         if (piece instanceof Tour) return new JLabel(estBlanc ? icoTour : icoTourN);
         if (piece instanceof Pion || piece instanceof PionDame_simple) return new JLabel(estBlanc ? icoPion : icoPionN);
@@ -289,11 +321,23 @@ public class VueControleur extends JFrame implements Observer {
         return new JLabel();
 
     }
+    /**
+     * Gère la fin de la partie en affichant une boîte de dialogue avec le nom du gagnant,
+     * puis ferme proprement l'application.
+     * <p>
+     * Le gagnant est déterminé en fonction de la couleur du joueur actif au moment de la fin.
+     * </p>
+     */
     private void gererFinDePartie() {
         String gagant= jeu.getCouleurJoueurActuel().equals("B")?"Blanc":"Noir";
         JOptionPane.showMessageDialog(this, "Fin de partie ! Le gagant est le jour "+gagant);
         System.exit(0);
     }
+    /**
+     * Appelé automatiquement lors d'un changement dans le modèle observé.
+     * @param o Objet observable.
+     * @param arg Argument de mise à jour (non utilisé ici).
+     */
     @Override
     public void update(Observable o, Object arg) {
         mettreAJourAffichage();

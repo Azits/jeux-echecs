@@ -5,7 +5,10 @@ import modele.plateau.Plateau;
 
 import javax.swing.*;
 import java.util.ArrayList;
-
+/**
+ * Classe représentant le jeu d'échecs, hérite de Jeu.
+ * Gère les règles spécifiques aux échecs : roque, échec, mat, pat, promotion.
+ */
 public class JeuxEchecs extends Jeu{
 	public JeuxEchecs(String jeu,String typeAdverssaire) {
         super(jeu,typeAdverssaire);
@@ -61,7 +64,6 @@ public class JeuxEchecs extends Jeu{
                 }
             }
         }
-
         return false;
     }
 
@@ -72,7 +74,7 @@ public class JeuxEchecs extends Jeu{
         ArrayList<Case> cases = clone.getCaseAvecPieces(couleur);
         for (Case c : cases) {
             Piece piece = c.getPiece();
-            ArrayList<Case> destinations = piece.getCasesAccessibles(new ArrayList<>());
+            ArrayList<Case> destinations = piece.getCasesAccessibles(null);
 
             for (Case d : destinations) {
                 Piece pieceDepart = c.getPiece();
@@ -173,6 +175,7 @@ public class JeuxEchecs extends Jeu{
         } else if (piece instanceof Tour) {
             ((Tour) piece).setDejaBouge(true);
         }
+
     }
 
     @Override
@@ -189,6 +192,7 @@ public class JeuxEchecs extends Jeu{
             getPlateau().deplacerPiece(coup.dep,coup.arr);
             JouerSon.lectureSon("Son/DeplacementAvecCapture.wav");
         }
+        appliquerLaPromotion(coup);
         appliquerLeRoque(coup);
     }
 
