@@ -1,10 +1,10 @@
 # Jeu d'Échecs et de Dames en Java ♟️
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/cfe7cf27-150f-43be-ab1c-70705411ba43" alt="Capture d’écran 1" width="500"/>
+  <img src="https://github.com/user-attachments/assets/bc5cda56-025b-475a-a61b-eff8a229ae06" alt="Capture d’écran 1" width="500"/>
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/f7ef6892-fca8-42c5-be49-f3cc2dd8a727" alt="Capture d’écran 2" width="500"/>
+  <img src="https://github.com/user-attachments/assets/ae643feb-563f-4966-b107-1c18eff91464" alt="Capture d’écran 2" width="500"/>
 </p>
 
 
