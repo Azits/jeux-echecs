@@ -13,6 +13,12 @@ public class JeuxEchecs extends Jeu{
 	public JeuxEchecs(String jeu,String typeAdverssaire) {
         super(jeu,typeAdverssaire);
     }
+
+    private Coup dernierCoup;
+
+    public Coup getDernierCoup() {
+        return this.dernierCoup;
+    }
     public boolean coupValide(Case caseClic1, Case caseClic2) {
         boolean valide = false;
         Plateau clone = getPlateau().clone();
@@ -32,6 +38,29 @@ public class JeuxEchecs extends Jeu{
 
                 if (!enEchec(getCouleurJoueurActuel(), clone)) {
                     valide = true;
+                }
+            }
+        }
+
+        // Prise en passant
+        if (!valide && caseClone1.getPiece() instanceof Pion && caseClone2.vide()) {
+            int dx = x2 - x1;
+            int dy = y2 - y1;
+            if (Math.abs(dx) == 1 && Math.abs(dy) == 1 && dernierCoup != null) {
+                Piece pieceDernierCoup = dernierCoup.arr.getPiece();
+                if (pieceDernierCoup instanceof Pion &&
+                        Math.abs(dernierCoup.dep.getY() - dernierCoup.arr.getY()) == 2 &&
+                        dernierCoup.arr.getX() == x2 &&
+                        dernierCoup.arr.getY() == y1) {
+
+                    Plateau simulation = getPlateau().clone();
+                    Case dep = simulation.getCase(x1, y1);
+                    Case arr = simulation.getCase(x2, y2);
+                    simulation.deplacerPiece(dep, arr);
+
+                    if (!enEchec(getCouleurJoueurActuel(), simulation)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -181,6 +210,25 @@ public class JeuxEchecs extends Jeu{
     @Override
     public void appliquerCoup(Coup coup) {
         ArrayList l=coup.dep.getPiece().getCasesAccessibles(null);
+        Piece piece = coup.dep.getPiece();
+
+        // Prise en passant
+        if (piece instanceof Pion && coup.arr.vide()) {
+            int dx = coup.arr.getX() - coup.dep.getX();
+            int dy = coup.arr.getY() - coup.dep.getY();
+            if (Math.abs(dx) == 1 && Math.abs(dy) == 1 && dernierCoup != null) {
+                if (dernierCoup.arr.getPiece() instanceof Pion &&
+                        Math.abs(dernierCoup.dep.getY() - dernierCoup.arr.getY()) == 2 &&
+                        dernierCoup.arr.getX() == coup.arr.getX() &&
+                        dernierCoup.arr.getY() == coup.dep.getY()) {
+
+                    Case casePionPris = getPlateau().getCase(dernierCoup.arr.getX(), dernierCoup.arr.getY());
+                    ajouterPiecePrise(casePionPris.getPiece());
+                    casePionPris.setPiece(null);
+                }
+            }
+        }
+
         if (coup.arr.getPiece()!=null){
             if(l.contains(coup.arr)){
                 ajouterPiecePrise(coup.arr.getPiece());
@@ -194,6 +242,8 @@ public class JeuxEchecs extends Jeu{
         }
         appliquerLaPromotion(coup);
         appliquerLeRoque(coup);
+        this.dernierCoup = coup;
+
     }
 
     public boolean partieGagner() {
