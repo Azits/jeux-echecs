@@ -48,6 +48,28 @@ public class JeuxEchecs extends Jeu{
         return false;
     }
 
+    private void appliquerPriseEnPassant(Coup coup) {
+        Piece piece = coup.dep.getPiece();
+
+        if (!(piece instanceof Pion) || !coup.arr.vide() || dernierCoup == null) return;
+
+        int dx = coup.arr.getX() - coup.dep.getX();
+        int dy = coup.arr.getY() - coup.dep.getY();
+
+        if (Math.abs(dx) == 1 && Math.abs(dy) == 1) {
+            if (dernierCoup.arr.getPiece() instanceof Pion &&
+                    Math.abs(dernierCoup.dep.getY() - dernierCoup.arr.getY()) == 2 &&
+                    dernierCoup.arr.getX() == coup.arr.getX() &&
+                    dernierCoup.arr.getY() == coup.dep.getY()) {
+
+                Case casePionPris = getPlateau().getCase(dernierCoup.arr.getX(), dernierCoup.arr.getY());
+                ajouterPiecePrise(casePionPris.getPiece());
+                casePionPris.setPiece(null);
+            }
+        }
+    }
+
+
     public boolean coupValide(Case caseClic1, Case caseClic2) {
         boolean valide = false;
         Plateau clone = getPlateau().clone();
@@ -223,23 +245,6 @@ public class JeuxEchecs extends Jeu{
         ArrayList l=coup.dep.getPiece().getCasesAccessibles(null);
         Piece piece = coup.dep.getPiece();
 
-        // Prise en passant
-        if (piece instanceof Pion && coup.arr.vide()) {
-            int dx = coup.arr.getX() - coup.dep.getX();
-            int dy = coup.arr.getY() - coup.dep.getY();
-            if (Math.abs(dx) == 1 && Math.abs(dy) == 1 && dernierCoup != null) {
-                if (dernierCoup.arr.getPiece() instanceof Pion &&
-                        Math.abs(dernierCoup.dep.getY() - dernierCoup.arr.getY()) == 2 &&
-                        dernierCoup.arr.getX() == coup.arr.getX() &&
-                        dernierCoup.arr.getY() == coup.dep.getY()) {
-
-                    Case casePionPris = getPlateau().getCase(dernierCoup.arr.getX(), dernierCoup.arr.getY());
-                    ajouterPiecePrise(casePionPris.getPiece());
-                    casePionPris.setPiece(null);
-                }
-            }
-        }
-
         if (coup.arr.getPiece()!=null){
             if(l.contains(coup.arr)){
                 ajouterPiecePrise(coup.arr.getPiece());
@@ -253,6 +258,7 @@ public class JeuxEchecs extends Jeu{
         }
         appliquerLaPromotion(coup);
         appliquerLeRoque(coup);
+        appliquerPriseEnPassant(coup);
         this.dernierCoup = coup;
 
     }
