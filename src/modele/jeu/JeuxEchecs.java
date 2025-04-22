@@ -16,9 +16,38 @@ public class JeuxEchecs extends Jeu{
 
     private Coup dernierCoup;
 
-    public Coup getDernierCoup() {
-        return this.dernierCoup;
+    private boolean priseEnPassantPossible(Case dep, Case arr, Plateau plateauClone) {
+        if (!(dep.getPiece() instanceof Pion) || !arr.vide() || dernierCoup == null) {
+            return false;
+        }
+
+        int x1 = dep.getX();
+        int y1 = dep.getY();
+        int x2 = arr.getX();
+        int y2 = arr.getY();
+
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+
+        if (Math.abs(dx) == 1 && Math.abs(dy) == 1) {
+            Piece pieceDernierCoup = dernierCoup.arr.getPiece();
+            if (pieceDernierCoup instanceof Pion &&
+                    Math.abs(dernierCoup.dep.getY() - dernierCoup.arr.getY()) == 2 &&
+                    dernierCoup.arr.getX() == x2 &&
+                    dernierCoup.arr.getY() == y1) {
+
+                Plateau simulation = plateauClone.clone();
+                Case depClone = simulation.getCase(x1, y1);
+                Case arrClone = simulation.getCase(x2, y2);
+                simulation.deplacerPiece(depClone, arrClone);
+
+                return !enEchec(getCouleurJoueurActuel(), simulation);
+            }
+        }
+
+        return false;
     }
+
     public boolean coupValide(Case caseClic1, Case caseClic2) {
         boolean valide = false;
         Plateau clone = getPlateau().clone();
@@ -35,7 +64,6 @@ public class JeuxEchecs extends Jeu{
             ArrayList<Case> casesAccessiblesC = caseClone1.getPiece().getCasesAccessibles(new ArrayList<>());
             if (casesAccessiblesC.contains(caseClone2)) {
                 clone.deplacerPiece(caseClone1, caseClone2);
-
                 if (!enEchec(getCouleurJoueurActuel(), clone)) {
                     valide = true;
                 }
@@ -43,27 +71,10 @@ public class JeuxEchecs extends Jeu{
         }
 
         // Prise en passant
-        if (!valide && caseClone1.getPiece() instanceof Pion && caseClone2.vide()) {
-            int dx = x2 - x1;
-            int dy = y2 - y1;
-            if (Math.abs(dx) == 1 && Math.abs(dy) == 1 && dernierCoup != null) {
-                Piece pieceDernierCoup = dernierCoup.arr.getPiece();
-                if (pieceDernierCoup instanceof Pion &&
-                        Math.abs(dernierCoup.dep.getY() - dernierCoup.arr.getY()) == 2 &&
-                        dernierCoup.arr.getX() == x2 &&
-                        dernierCoup.arr.getY() == y1) {
-
-                    Plateau simulation = getPlateau().clone();
-                    Case dep = simulation.getCase(x1, y1);
-                    Case arr = simulation.getCase(x2, y2);
-                    simulation.deplacerPiece(dep, arr);
-
-                    if (!enEchec(getCouleurJoueurActuel(), simulation)) {
-                        return true;
-                    }
-                }
-            }
+        if (!valide && priseEnPassantPossible(caseClone1, caseClone2, clone)) {
+            return true;
         }
+
 
         if (caseClone1.getPiece() instanceof Roi) {
             int dx = x2 - x1;
@@ -265,12 +276,16 @@ public class JeuxEchecs extends Jeu{
                 options,
                 options[0]
         );
-
-        switch (choix) {
-            case 1: return new Tour(getPlateau(), couleur);
-            case 2: return new Fou(getPlateau(), couleur);
-            case 3: return new Cavalier(getPlateau(), couleur);
-            default: return new Reine(getPlateau(), couleur); // défaut : Reine
+        if (getJoueurActuel() instanceof JoueurIA){
+            return new Reine(getPlateau(),couleur);
+        }
+        else{
+            switch (choix) {
+                case 1: return new Tour(getPlateau(), couleur);
+                case 2: return new Fou(getPlateau(), couleur);
+                case 3: return new Cavalier(getPlateau(), couleur);
+                default: return new Reine(getPlateau(), couleur); // défaut : Reine
+            }
         }
     }
 }
