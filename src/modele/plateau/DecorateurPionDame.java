@@ -9,7 +9,6 @@ public class DecorateurPionDame extends DecorateurCasesAccessibles {
     public DecorateurPionDame(DecorateurCasesAccessibles baseDecorateur) {
         super(baseDecorateur);
     }
-
     public ArrayList<Case> getMesCasesAccessibles(ArrayList<Case> caseEnemieParcourue) {
         ArrayList<Case> res = new ArrayList<>();
         Case depart = piece.getCase();
@@ -40,7 +39,6 @@ public class DecorateurPionDame extends DecorateurCasesAccessibles {
                     res.add(caseA);
                     caseA = plateau.getCaseDansDirection(caseA, dir.dx, dir.dy);
                 }
-
                 if (caseA != null && !caseA.vide() && !caseA.getPiece().getCouleur().equals(piece.getCouleur())) {
                     Case apres = plateau.getCaseDansDirection(caseA, dir.dx, dir.dy);
                     if (apres != null && apres.vide()) {
@@ -55,7 +53,6 @@ public class DecorateurPionDame extends DecorateurCasesAccessibles {
     }
 
     private void trouverPrisesMultiples(Case depart, DIirectionEnDiagonale directionInitiale, ArrayList<Case> res, ArrayList<Case> dejaPrises, Case dernierEnnemi) {
-        // marquer ennemi déjà pris
         dejaPrises.add(dernierEnnemi);
 
         for (DIirectionEnDiagonale dir : DIirectionEnDiagonale.values()) {

@@ -28,7 +28,7 @@ public class DecorateurPion extends DecorateurCasesAccessibles {
             // Avancer de 2 cases uniquement si départ (1 pour noir, 6 pour blanc)
             boolean surLigneDepart = (piece.getCouleur().equals("B") && y == 6) || (piece.getCouleur().equals("N") && y == 1);
 
-            if (surLigneDepart && plateau.contenuDansGrille(new Point(x, y + 2 * direction))) {
+            if (surLigneDepart && plateau.contenuDansGrille(new Point(x, y + 2 * direction)) && avant.vide()) {
                 Case deuxAvant = plateau.getCase(x, y + 2 * direction);
                 if (deuxAvant.vide()) {
                     res.add(deuxAvant);
