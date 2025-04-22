@@ -37,7 +37,6 @@ public class Main {
                             VueControleur vc=new VueControleur(jeu);
                             vc.setVisible(true);
                         }
-
                         return;
                     }
 

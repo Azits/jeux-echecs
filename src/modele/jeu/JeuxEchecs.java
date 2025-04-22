@@ -15,10 +15,6 @@ public class JeuxEchecs extends Jeu{
     }
 
     private Coup dernierCoup;
-
-    public Coup getDernierCoup() {
-        return this.dernierCoup;
-    }
     public boolean coupValide(Case caseClic1, Case caseClic2) {
         boolean valide = false;
         Plateau clone = getPlateau().clone();
@@ -35,7 +31,6 @@ public class JeuxEchecs extends Jeu{
             ArrayList<Case> casesAccessiblesC = caseClone1.getPiece().getCasesAccessibles(new ArrayList<>());
             if (casesAccessiblesC.contains(caseClone2)) {
                 clone.deplacerPiece(caseClone1, caseClone2);
-
                 if (!enEchec(getCouleurJoueurActuel(), clone)) {
                     valide = true;
                 }
@@ -265,12 +260,16 @@ public class JeuxEchecs extends Jeu{
                 options,
                 options[0]
         );
-
-        switch (choix) {
-            case 1: return new Tour(getPlateau(), couleur);
-            case 2: return new Fou(getPlateau(), couleur);
-            case 3: return new Cavalier(getPlateau(), couleur);
-            default: return new Reine(getPlateau(), couleur); // défaut : Reine
+        if (getJoueurActuel() instanceof JoueurIA){
+            return new Reine(getPlateau(),couleur);
+        }
+        else{
+            switch (choix) {
+                case 1: return new Tour(getPlateau(), couleur);
+                case 2: return new Fou(getPlateau(), couleur);
+                case 3: return new Cavalier(getPlateau(), couleur);
+                default: return new Reine(getPlateau(), couleur); // défaut : Reine
+            }
         }
     }
 }

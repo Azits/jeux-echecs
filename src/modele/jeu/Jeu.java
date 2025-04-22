@@ -40,7 +40,7 @@ public abstract class Jeu extends Thread{
                 joueurs[1]=new JoueurHumain(this,"Mori","B");
             }
             else {
-                joueurs[0]=new JoueurIA(this,"Azits","N");
+                joueurs[0]=new JoueurIAEchecs(this,"Azits","N");
                 joueurs[1]=new JoueurHumain(this,"Mori","B");
             }
         }
@@ -51,7 +51,7 @@ public abstract class Jeu extends Thread{
                 joueurs[1]=new JoueurHumain(this,"Mori","B");
             }
             else {
-                joueurs[0]=new JoueurIA(this,"Azits","N");
+                joueurs[0]=new JoueurIADames(this,"Azits","N");
                 joueurs[1]=new JoueurHumain(this,"Mori","B");
             }
 
@@ -103,33 +103,54 @@ public abstract class Jeu extends Thread{
         jouerPartie();
     }
     public void jouerPartie() {
-
         while (!partieGagner()) {
-            synchronized (this) {
-                try {
-                    while (coupRecu == null) {
-                        wait();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            Joueur joueurActuel = joueurs[idxJoueurActuel];
 
-                if (this.coupValide(coupRecu.dep, coupRecu.arr)) {
-                    appliquerCoup(coupRecu);
+            if (joueurActuel instanceof JoueurIA) {
+                Coup coup = joueurActuel.getCoup();
+                if (coup != null && coupValide(coup.dep, coup.arr)) {
+                    appliquerCoup(coup);
                     if (!partieGagner()) {
                         idxJoueurActuel = (idxJoueurActuel + 1) % N_JOUEUR;
                     }
-
                 } else {
-                    System.out.println("coup Non valide");
+                    System.out.println("Coup IA non valide ou null");
                 }
+            } else {
+                synchronized (this) {
+                    try {
+                        while (coupRecu == null) {
+                            wait();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                coupRecu = null;
+                    if (coupValide(coupRecu.dep, coupRecu.arr)) {
+                        appliquerCoup(coupRecu);
+                        if (!partieGagner()) {
+                            idxJoueurActuel = (idxJoueurActuel + 1) % N_JOUEUR;
+                        }
+                    } else {
+                        System.out.println("Coup non valide (joueur humain)");
+                    }
+
+                    coupRecu = null;
+                }
+            }
+
+            // Pour laisser le temps à l'interface de se rafraîchir
+            try {
+                Thread.sleep(200); // facultatif
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
 
+        System.out.println("Partie terminée !");
     }
 
+    public Joueur getJoueurActuel(){ return joueurs[idxJoueurActuel];}
     public String getCouleurJoueurActuel() {
     	return joueurs[idxJoueurActuel].getCouleur();
     }

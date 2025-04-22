@@ -32,7 +32,6 @@ public class JeuDames extends  Jeu{
         boolean valide = false;
         if (caseClic1.getPiece() != null) {
             ArrayList<Case> casesAccessiblesC = caseClic1.getPiece().getCasesAccessibles(new ArrayList<>());
-
             if (casesAccessiblesC.contains(caseClic2)) {
                 valide = true;
             }
