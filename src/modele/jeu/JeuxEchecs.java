@@ -10,11 +10,66 @@ import java.util.ArrayList;
  * Gère les règles spécifiques aux échecs : roque, échec, mat, pat, promotion.
  */
 public class JeuxEchecs extends Jeu{
-	public JeuxEchecs(String jeu,String typeAdverssaire) {
+    public JeuxEchecs(String jeu,String typeAdverssaire) {
         super(jeu,typeAdverssaire);
     }
 
     private Coup dernierCoup;
+
+    private boolean priseEnPassantPossible(Case dep, Case arr, Plateau plateauClone) {
+        if (!(dep.getPiece() instanceof Pion) || !arr.vide() || dernierCoup == null) {
+            return false;
+        }
+
+        int x1 = dep.getX();
+        int y1 = dep.getY();
+        int x2 = arr.getX();
+        int y2 = arr.getY();
+
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+
+        if (Math.abs(dx) == 1 && Math.abs(dy) == 1) {
+            Piece pieceDernierCoup = dernierCoup.arr.getPiece();
+            if (pieceDernierCoup instanceof Pion &&
+                    Math.abs(dernierCoup.dep.getY() - dernierCoup.arr.getY()) == 2 &&
+                    dernierCoup.arr.getX() == x2 &&
+                    dernierCoup.arr.getY() == y1) {
+
+                Plateau simulation = plateauClone.clone();
+                Case depClone = simulation.getCase(x1, y1);
+                Case arrClone = simulation.getCase(x2, y2);
+                simulation.deplacerPiece(depClone, arrClone);
+
+                return !enEchec(getCouleurJoueurActuel(), simulation);
+            }
+        }
+
+        return false;
+    }
+
+    private void appliquerPriseEnPassant(Coup coup) {
+        Piece piece = coup.dep.getPiece();
+
+        if (!(piece instanceof Pion) || !coup.arr.vide() || dernierCoup == null) return;
+
+        int dx = coup.arr.getX() - coup.dep.getX();
+        int dy = coup.arr.getY() - coup.dep.getY();
+
+        if (Math.abs(dx) == 1 && Math.abs(dy) == 1) {
+            if (dernierCoup.arr.getPiece() instanceof Pion &&
+                    Math.abs(dernierCoup.dep.getY() - dernierCoup.arr.getY()) == 2 &&
+                    dernierCoup.arr.getX() == coup.arr.getX() &&
+                    dernierCoup.arr.getY() == coup.dep.getY()) {
+
+                Case casePionPris = getPlateau().getCase(dernierCoup.arr.getX(), dernierCoup.arr.getY());
+                ajouterPiecePrise(casePionPris.getPiece());
+                casePionPris.setPiece(null);
+            }
+        }
+    }
+
+
     public boolean coupValide(Case caseClic1, Case caseClic2) {
         boolean valide = false;
         Plateau clone = getPlateau().clone();
@@ -38,28 +93,11 @@ public class JeuxEchecs extends Jeu{
         }
 
         // Prise en passant
-        if (!valide && caseClone1.getPiece() instanceof Pion && caseClone2.vide()) {
-            int dx = x2 - x1;
-            int dy = y2 - y1;
-            if (Math.abs(dx) == 1 && Math.abs(dy) == 1 && dernierCoup != null) {
-                Piece pieceDernierCoup = dernierCoup.arr.getPiece();
-                if (pieceDernierCoup instanceof Pion &&
-                        Math.abs(dernierCoup.dep.getY() - dernierCoup.arr.getY()) == 2 &&
-                        dernierCoup.arr.getX() == x2 &&
-                        dernierCoup.arr.getY() == y1) {
-
-                    Plateau simulation = getPlateau().clone();
-                    Case dep = simulation.getCase(x1, y1);
-                    Case arr = simulation.getCase(x2, y2);
-                    simulation.deplacerPiece(dep, arr);
-
-                    if (!enEchec(getCouleurJoueurActuel(), simulation)) {
-                        return true;
-                    }
-                }
-            }
+        if (!valide && priseEnPassantPossible(caseClone1, caseClone2, clone)) {
+            valide = true;
         }
 
+        // Roque
         if (caseClone1.getPiece() instanceof Roi) {
             int dx = x2 - x1;
             if (Math.abs(dx) == 2 && peutRoquer(clone, caseClone1, caseClone2)) {
@@ -207,23 +245,6 @@ public class JeuxEchecs extends Jeu{
         ArrayList l=coup.dep.getPiece().getCasesAccessibles(null);
         Piece piece = coup.dep.getPiece();
 
-        // Prise en passant
-        if (piece instanceof Pion && coup.arr.vide()) {
-            int dx = coup.arr.getX() - coup.dep.getX();
-            int dy = coup.arr.getY() - coup.dep.getY();
-            if (Math.abs(dx) == 1 && Math.abs(dy) == 1 && dernierCoup != null) {
-                if (dernierCoup.arr.getPiece() instanceof Pion &&
-                        Math.abs(dernierCoup.dep.getY() - dernierCoup.arr.getY()) == 2 &&
-                        dernierCoup.arr.getX() == coup.arr.getX() &&
-                        dernierCoup.arr.getY() == coup.dep.getY()) {
-
-                    Case casePionPris = getPlateau().getCase(dernierCoup.arr.getX(), dernierCoup.arr.getY());
-                    ajouterPiecePrise(casePionPris.getPiece());
-                    casePionPris.setPiece(null);
-                }
-            }
-        }
-
         if (coup.arr.getPiece()!=null){
             if(l.contains(coup.arr)){
                 ajouterPiecePrise(coup.arr.getPiece());
@@ -237,6 +258,7 @@ public class JeuxEchecs extends Jeu{
         }
         appliquerLaPromotion(coup);
         appliquerLeRoque(coup);
+        appliquerPriseEnPassant(coup);
         this.dernierCoup = coup;
 
     }
